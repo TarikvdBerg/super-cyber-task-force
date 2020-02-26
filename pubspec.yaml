@@ -1,5 +1,5 @@
 name: example_flutter
-description: An example project for Flutter with desktop target support.
+description: An example project for flutter-desktop-embedding.
 
 version: 0.1.0
 
@@ -15,9 +15,6 @@ dependencies:
     sdk: flutter
 
   cupertino_icons: ^0.1.0
-
-  color_panel:
-    path: ./plugins/color_panel
 
 dev_dependencies:
   flutter_test:
