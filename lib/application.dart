@@ -1,4 +1,5 @@
 import 'package:SCTFPasswordManager/sidebar/sidebar.dart';
+import 'package:SCTFPasswordManager/views/login.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -22,6 +23,10 @@ class SCTFPasswordManager extends StatelessWidget {
               bodyText1: TextStyle(color: Color(0XFFBEBEBE)),
               bodyText2: TextStyle(color: Color(0XFFBEBEBE)),
             )),
+        initialRoute: "login",
+        routes: {
+          "login" : (context) => LoginView(),
+        },
         home: Scaffold(
             body: Column(
           children: <Widget>[
