@@ -23,21 +23,32 @@ class Register extends StatelessWidget {
               bodyText1: TextStyle(color: Color(0XFFBEBEBE)),
               bodyText2: TextStyle(color: Color(0XFFBEBEBE)),
             )),
-      home: Scaffold(
-        body: Container(
-          width: 460,
-          color: Theme.of(context).primaryColorDark,
-          child: Column(
-            children: <Widget>[
-              Text('Register account',
-                style: TextStyle(
-                  color: Theme.of(context).textTheme.headline1.color,
-                  fontSize: 48,
-                  fontWeight: FontWeight.w700,
-                )),
-              RegisterForm()
-            ],
-          )
+      home: RegisterWidget()
+    );
+  }
+}
+
+class RegisterWidget extends StatelessWidget {
+  const RegisterWidget({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Container(
+        width: 460,
+        color: Theme.of(context).primaryColorDark,
+        child: Column(
+          children: <Widget>[
+            Text('Register account',
+              style: TextStyle(
+                color: Theme.of(context).textTheme.headline1.color,
+                fontSize: 48,
+                fontWeight: FontWeight.w700,
+              )),
+            RegisterForm()
+          ],
         )
       )
     );
