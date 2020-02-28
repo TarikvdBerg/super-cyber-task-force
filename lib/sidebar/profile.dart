@@ -1,10 +1,19 @@
 import 'package:flutter/material.dart';
 
-class SideBarProfile extends StatelessWidget {
+class SideBarProfile extends StatefulWidget {
+  final String userName;
+  final String eMail;
+
   const SideBarProfile({
     Key key,
+    this.userName,
+    this.eMail,
   }) : super(key: key);
 
+  _SideBarProfileState createState() => _SideBarProfileState();
+}
+
+class _SideBarProfileState extends State<SideBarProfile> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -12,20 +21,19 @@ class SideBarProfile extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            Text("John Doe",
+            Text(this.widget.userName,
                 style: TextStyle(
-                  color: Color(0xFFBEBEBE),
+                  color: Theme.of(context).textTheme.bodyText1.color,
                   fontSize: 20,
                   fontWeight: FontWeight.w700,
                 )),
-            Text("john.doe@isp.com",
+            Text(this.widget.eMail,
                 style: TextStyle(
-                  color: Color(0xFFBEBEBE),
-                  fontSize: 12,
-                  fontWeight: FontWeight.w700,
+                  color: Theme.of(context).textTheme.bodyText1.color,
+                  fontSize: 12
                 )),
           ],
         )
-        );
+      );
   }
 }

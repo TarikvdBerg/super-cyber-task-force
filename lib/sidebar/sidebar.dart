@@ -3,7 +3,20 @@ import 'package:SCTFPasswordManager/sidebar/navigation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
-class SideBar extends StatelessWidget {
+class SideBar extends StatefulWidget {
+  final String userName;
+  final String eMail;
+
+  SideBar({
+    Key key,
+    this.userName,
+    this.eMail
+  }) : super(key: key);
+
+  _SideBarState createState() => _SideBarState();
+}
+
+class _SideBarState extends State<SideBar> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -12,9 +25,9 @@ class SideBar extends StatelessWidget {
       height: MediaQuery.of(context).size.height,
       child: Column(
         children: <Widget>[
-          SideBarProfile(),
+          SideBarProfile(userName: this.widget.userName, eMail: this.widget.eMail),
           Divider(
-            color: Color(0xFFBEBEBE),
+            color: Theme.of(context).textTheme.headline6.color
           ),
           Container(
             margin: EdgeInsets.only(top: 10),
