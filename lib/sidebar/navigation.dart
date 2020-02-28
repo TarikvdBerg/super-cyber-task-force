@@ -23,7 +23,7 @@ class _NavigationButtonState extends State<NavigationButton> {
       child: FlatButton(
           onPressed: () {},
           padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-          hoverColor: Theme.of(context).primaryColorLight,
+          hoverColor: Theme.of(context).primaryColor,
           child: Row(children: <Widget>[
             Padding(
               padding: const EdgeInsets.only(right: 15),

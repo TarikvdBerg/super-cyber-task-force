@@ -1,5 +1,6 @@
 import 'package:SCTFPasswordManager/sidebar/sidebar.dart';
 import 'package:SCTFPasswordManager/views/login.dart';
+import 'package:SCTFPasswordManager/views/password_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -9,8 +10,10 @@ class SCTFPasswordManager extends StatelessWidget {
     return MaterialApp(
         title: 'SCTF Password Manager',
         theme: ThemeData(
-            primaryColor: Color(0xFF131313),
-            primaryColorLight: Color(0xFF212121),
+            primaryColorDark: Color(0xFF131313),
+            primaryColor: Color(0xFF212121),
+            primaryColorLight: Color(0xFF484848),
+            dividerColor: Color(0xBEBEBEBE),
             buttonColor: Color(0xFF008B7A),
             iconTheme: IconThemeData(color: Color(0xFFBEBEBE)),
             textTheme: TextTheme(
@@ -25,16 +28,10 @@ class SCTFPasswordManager extends StatelessWidget {
             )),
         initialRoute: "login",
         routes: {
-          "login" : (context) => LoginView(),
+          "login": (context) => LoginView(),
+          "dashboard": (context) => PasswordView()
         },
-        home: Scaffold(
-            body: Column(
-          children: <Widget>[
-            Align(
-              alignment: Alignment.centerLeft,
-              child: SideBar(userName: "John Doe", eMail: "john.doe@isp.com"),
-            )
-          ],
-        )));
+        home: Scaffold(),
+        );
   }
 }

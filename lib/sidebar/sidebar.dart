@@ -20,14 +20,14 @@ class _SideBarState extends State<SideBar> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Theme.of(context).primaryColor,
+      color: Theme.of(context).primaryColorDark,
       width: 250,
       height: MediaQuery.of(context).size.height,
       child: Column(
         children: <Widget>[
           SideBarProfile(userName: this.widget.userName, eMail: this.widget.eMail),
           Divider(
-            color: Theme.of(context).textTheme.headline6.color
+            color: Theme.of(context).dividerColor
           ),
           Container(
             margin: EdgeInsets.only(top: 10),
