@@ -8,9 +8,16 @@ class SCTFPasswordManager extends StatelessWidget {
     return MaterialApp(
         title: 'SCTF Password Manager',
         theme: ThemeData(
-            primaryColor: Color(0xFF131313), primaryColorLight: Color(0xFF212121)),
+            primaryColor: Color(0xFF131313),
+            primaryColorLight: Color(0xFF212121)),
         home: Scaffold(
-          body: SideBar(),
-        ));
+            body: Column(
+          children: <Widget>[
+            Align(
+              alignment: Alignment.centerLeft,
+              child: SideBar(),
+            )
+          ],
+        )));
   }
 }
