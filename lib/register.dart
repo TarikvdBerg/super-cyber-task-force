@@ -6,10 +6,38 @@ class Register extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Register page',
+      theme: ThemeData(
+            primaryColorDark: Color(0xFF131313),
+            primaryColor: Color(0xFF212121),
+            primaryColorLight: Color(0xFF484848),
+            dividerColor: Color(0xBEBEBEBE),
+            buttonColor: Color(0xFF008B7A),
+            iconTheme: IconThemeData(color: Color(0xFFBEBEBE)),
+            textTheme: TextTheme(
+              headline1: TextStyle(color: Color(0XFFBEBEBE)),
+              headline2: TextStyle(color: Color(0XFFBEBEBE)),
+              headline3: TextStyle(color: Color(0XFFBEBEBE)),
+              headline4: TextStyle(color: Color(0XFFBEBEBE)),
+              headline5: TextStyle(color: Color(0XFFBEBEBE)),
+              headline6: TextStyle(color: Color(0XFFBEBEBE)),
+              bodyText1: TextStyle(color: Color(0XFFBEBEBE)),
+              bodyText2: TextStyle(color: Color(0XFFBEBEBE)),
+            )),
       home: Scaffold(
-        body: SizedBox(
-          width: 400,
-          child: RegisterForm()
+        body: Container(
+          width: 460,
+          color: Theme.of(context).primaryColorDark,
+          child: Column(
+            children: <Widget>[
+              Text('Register account',
+                style: TextStyle(
+                  color: Theme.of(context).textTheme.headline1.color,
+                  fontSize: 48,
+                  fontWeight: FontWeight.w700,
+                )),
+              RegisterForm()
+            ],
+          )
         )
       )
     );
@@ -85,7 +113,7 @@ class RegisterFormState extends State<RegisterForm> {
                   Scaffold.of(context).showSnackBar(SnackBar(content: Text('Processing Data')));
                 }
               },
-              child: Text('Submit'),
+              child: Text('Create account'),
             ),
           ),
         ],
