@@ -1,5 +1,6 @@
 import 'package:SCTFPasswordManager/passwords/password.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 
 class PasswordGroup extends StatefulWidget {
   final List<Password> passwordList;
@@ -17,94 +18,31 @@ class PasswordGroup extends StatefulWidget {
 class _PasswordGroupState extends State<PasswordGroup> {
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return Container(
+      alignment: Alignment.topCenter,
+      margin: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+      // width: 700,
+      child: Column(
         children: <Widget>[
-          Column(
+          Row(
             children: <Widget>[
-              Row(
-                children: <Widget>[
-                  Text(this.widget.groupName, style: Theme.of(context).textTheme.headline4,),
-                  IconButton(
-                      icon: Icon(Icons.keyboard_arrow_down),
-                      onPressed: () {
-                        print("Cool");
-                      })
-                ],
-              ),
-              Divider(
-                color: Color(0xFFBEBEBE),
-                thickness: 8,
-                height: 8,
-              )
+              Text(this.widget.groupName,
+                  style: Theme.of(context).textTheme.headline5),
+              Spacer(),
+              IconButton(
+                  icon: Icon(Icons.keyboard_arrow_down),
+                  tooltip: "Collapse/Uncollapse Group",
+                  onPressed: () {})
             ],
           ),
-          Container(
-            alignment: Alignment.topCenter,
-            width: MediaQuery.of(context).size.width - 300,
-            child: Wrap(
-              spacing: 15,
-              runSpacing: 20,
-              children: <Widget>[
-                Password(
-                  userName: "User1",
-                  encPassword: "TSE",
-                  description: "Test",
-                  imgURL:
-                      "https://cdn1.iconfinder.com/data/icons/logotypes/32/youtube-512.png",
-                  name: "Youtube",
-                ),
-                Password(
-                  userName: "User1",
-                  encPassword: "TSE",
-                  description: "Test",
-                  imgURL:
-                      "https://cdn1.iconfinder.com/data/icons/logotypes/32/youtube-512.png",
-                  name: "Youtube",
-                ),
-                Password(
-                  userName: "User1",
-                  encPassword: "TSE",
-                  description: "Test",
-                  imgURL:
-                      "https://cdn1.iconfinder.com/data/icons/logotypes/32/youtube-512.png",
-                  name: "Youtube",
-                ),
-                Password(
-                  userName: "User1",
-                  encPassword: "TSE",
-                  description: "Test",
-                  imgURL:
-                      "https://cdn1.iconfinder.com/data/icons/logotypes/32/youtube-512.png",
-                  name: "Youtube",
-                ),
-                Password(
-                  userName: "User1",
-                  encPassword: "TSE",
-                  description: "Test",
-                  imgURL:
-                      "https://cdn1.iconfinder.com/data/icons/logotypes/32/youtube-512.png",
-                  name: "Youtube",
-                ),
-                Password(
-                  userName: "User1",
-                  encPassword: "TSE",
-                  description: "Test",
-                  imgURL:
-                      "https://cdn1.iconfinder.com/data/icons/logotypes/32/youtube-512.png",
-                  name: "Youtube",
-                ),
-                Password(
-                  userName: "User1",
-                  encPassword: "TSE",
-                  description: "Test",
-                  imgURL:
-                      "https://cdn1.iconfinder.com/data/icons/logotypes/32/youtube-512.png",
-                  name: "Youtube",
-                ),
-              ],
-            ),
-          )
+          Divider(color: Theme.of(context).dividerColor),
+          Wrap(
+            spacing: 15,
+            runSpacing: 20,
+            children: this.widget.passwordList
+          ),
         ],
-      );
+      ),
+    );
   }
 }

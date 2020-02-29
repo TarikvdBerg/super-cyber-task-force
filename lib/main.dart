@@ -14,7 +14,6 @@
 
 import 'package:SCTFPasswordManager/application.dart';
 import 'package:SCTFPasswordManager/register.dart';
-//import 'package:SCTFPasswordManager/register.dart';
 import 'package:flutter/foundation.dart'
     show debugDefaultTargetPlatformOverride;
 import 'package:flutter/material.dart';
