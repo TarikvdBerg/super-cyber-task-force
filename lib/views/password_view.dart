@@ -1,3 +1,4 @@
+import 'package:SCTFPasswordManager/passwords/group.dart';
 import 'package:SCTFPasswordManager/passwords/password.dart';
 import 'package:SCTFPasswordManager/sidebar/sidebar.dart';
 import 'package:flutter/material.dart';
@@ -11,16 +12,10 @@ class PasswordView extends StatelessWidget {
             child: Row(
               children: <Widget>[
                 SideBar(userName: "John Doe", eMail: "john.doe@gmail.com"),
-                Container(
-                  margin: EdgeInsets.only(left: 15),
-                  child: Password(
-                    imgURL:
-                        "https://cdn1.iconfinder.com/data/icons/logotypes/32/youtube-512.png",
-                    description: "Cool Password",
-                    encPassword: "l;ahsdgljnadbdoSEFL;KJ",
-                    name: "YouTube",
-                    userName: "johnny_doe",
-                  ),
+                SingleChildScrollView(
+                  child: Align(
+                    alignment: Alignment.topCenter,
+                    child: PasswordGroup(groupName: "Cool Password Group"))
                 )
               ],
             )));
