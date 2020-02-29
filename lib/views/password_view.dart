@@ -12,10 +12,83 @@ class PasswordView extends StatelessWidget {
             child: Row(
               children: <Widget>[
                 SideBar(userName: "John Doe", eMail: "john.doe@gmail.com"),
-                SingleChildScrollView(
-                  child: Align(
-                    alignment: Alignment.topCenter,
-                    child: PasswordGroup(groupName: "Cool Password Group"))
+                Container(
+                  width: MediaQuery.of(context).size.width - 250,
+                  height: MediaQuery.of(context).size.height,
+                  alignment: Alignment.topCenter,
+                  child: ListView(children: <Widget>[
+                    PasswordGroup(
+                      groupName: "Cool Password Group",
+                      passwordList: <Password>[
+                        Password(
+                          userName: "User1",
+                          encPassword: "TSE",
+                          description: "Test",
+                          imgURL:
+                              "https://cdn1.iconfinder.com/data/icons/logotypes/32/youtube-512.png",
+                          name: "Youtube",
+                        ),
+                        Password(
+                          userName: "User1",
+                          encPassword: "TSE",
+                          description: "Test",
+                          imgURL:
+                              "https://cdn1.iconfinder.com/data/icons/logotypes/32/youtube-512.png",
+                          name: "Youtube",
+                        ),
+                        Password(
+                          userName: "User1",
+                          encPassword: "TSE",
+                          description: "Test",
+                          imgURL:
+                              "https://cdn1.iconfinder.com/data/icons/logotypes/32/youtube-512.png",
+                          name: "Youtube",
+                        ),
+                        Password(
+                          userName: "User1",
+                          encPassword: "TSE",
+                          description: "Test",
+                          imgURL:
+                              "https://cdn1.iconfinder.com/data/icons/logotypes/32/youtube-512.png",
+                          name: "Youtube",
+                        ),
+                        Password(
+                          userName: "User1",
+                          encPassword: "TSE",
+                          description: "Test",
+                          imgURL:
+                              "https://cdn1.iconfinder.com/data/icons/logotypes/32/youtube-512.png",
+                          name: "Youtube",
+                        ),
+                        Password(
+                          userName: "User1",
+                          encPassword: "TSE",
+                          description: "Test",
+                          imgURL:
+                              "https://cdn1.iconfinder.com/data/icons/logotypes/32/youtube-512.png",
+                          name: "Youtube",
+                        ),
+                        Password(
+                          userName: "User1",
+                          encPassword: "TSE",
+                          description: "Test",
+                          imgURL:
+                              "https://cdn1.iconfinder.com/data/icons/logotypes/32/youtube-512.png",
+                          name: "Youtube",
+                        ),
+                      ],
+                    ),
+                    PasswordGroup(groupName: "Cool Password Group", passwordList: <Password>[
+                      Password(
+                          userName: "User1",
+                          encPassword: "TSE",
+                          description: "Test",
+                          imgURL:
+                              "https://cdn1.iconfinder.com/data/icons/logotypes/32/youtube-512.png",
+                          name: "Youtube",
+                        ),
+                    ],),
+                  ]),
                 )
               ],
             )));
