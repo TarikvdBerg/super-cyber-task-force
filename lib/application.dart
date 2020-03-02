@@ -10,6 +10,7 @@ class SCTFPasswordManager extends StatelessWidget {
     return MaterialApp(
         title: 'SCTF Password Manager',
         theme: ThemeData(
+          brightness: Brightness.dark,
             primaryColorDark: Color(0xFF131313),
             primaryColor: Color(0xFF212121),
             primaryColorLight: Color(0xFF484848),
@@ -25,7 +26,9 @@ class SCTFPasswordManager extends StatelessWidget {
               headline6: TextStyle(color: Color(0XFFBEBEBE)),
               bodyText1: TextStyle(color: Color(0XFFBEBEBE)),
               bodyText2: TextStyle(color: Color(0XFFBEBEBE)),
-            )),
+            ),
+            cardColor: Color(0xFF212121)
+            ),
         initialRoute: "login",
         routes: {
           "login": (context) => LoginView(),
