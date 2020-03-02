@@ -5,7 +5,6 @@ import 'package:flutter/rendering.dart';
 class PasswordGroup extends StatefulWidget {
   final List<Password> passwordList;
   final String groupName;
-  bool isExpanded = true;
 
   PasswordGroup({
     Key key,
@@ -17,6 +16,8 @@ class PasswordGroup extends StatefulWidget {
 }
 
 class _PasswordGroupState extends State<PasswordGroup> {
+  bool isExpanded = true;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -26,13 +27,13 @@ class _PasswordGroupState extends State<PasswordGroup> {
           animationDuration: Duration(milliseconds: 300),
           expansionCallback: (int index, bool isExpanded) {
             setState(() {
-              this.widget.isExpanded = !isExpanded;
+              this.isExpanded = !this.isExpanded;
             });
           },
           children: <ExpansionPanel>[
             ExpansionPanel(
                 canTapOnHeader: true,
-                isExpanded: this.widget.isExpanded,
+                isExpanded: isExpanded,
                 headerBuilder: (BuildContext context, bool isExpanded) {
                   return Container(
                       margin: EdgeInsets.only(left: 20),

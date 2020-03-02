@@ -13,7 +13,6 @@
 // limitations under the License.
 
 import 'package:SCTFPasswordManager/application.dart';
-import 'package:SCTFPasswordManager/register.dart';
 import 'package:flutter/foundation.dart'
     show debugDefaultTargetPlatformOverride;
 import 'package:flutter/material.dart';
@@ -23,6 +22,5 @@ void main() {
   debugDefaultTargetPlatformOverride = TargetPlatform.fuchsia;
 
   runApp(new SCTFPasswordManager());
-  // runApp(new Register());
 }
 
