@@ -10,23 +10,23 @@ class RegisterView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-          child: Row(
-            children: <Widget>[
-            SizedBox(
-              child: Column(
-                children: <Widget>[
-                  Text('Register account',
+        child: Align(
+          alignment: Alignment.center,
+          child: SizedBox(
+            width: 480,
+            height: 500,
+            child: Column(
+              children: <Widget>[
+                Text('Register account',
                     style: TextStyle(
                       color: Theme.of(context).textTheme.headline1.color,
                       fontSize: 48,
                       fontWeight: FontWeight.w700,
-                    )
-                  ),
-                  RegisterForm()
-                ],
-              ),
+                    )),
+                RegisterForm()
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );
@@ -35,7 +35,7 @@ class RegisterView extends StatelessWidget {
 
 class RegisterForm extends StatefulWidget {
   @override
-  RegisterFormState createState(){
+  RegisterFormState createState() {
     return RegisterFormState();
   }
 }
@@ -44,7 +44,7 @@ class RegisterFormState extends State<RegisterForm> {
   final _formKey = GlobalKey<FormState>();
 
   @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
     return Form(
       key: _formKey,
       child: Column(
@@ -52,8 +52,7 @@ class RegisterFormState extends State<RegisterForm> {
         children: <Widget>[
           TextFormField(
             decoration: const InputDecoration(
-              labelText: 'Email adress'
-            ),
+                labelText: 'Email adress', prefixIcon: Icon(Icons.email)),
             validator: (value) {
               if (value.isEmpty) {
                 return 'Please enter a email adress';
@@ -63,8 +62,7 @@ class RegisterFormState extends State<RegisterForm> {
           ),
           TextFormField(
             decoration: const InputDecoration(
-              labelText: 'Username'
-            ),
+                labelText: 'Username', prefixIcon: Icon(Icons.person)),
             validator: (value) {
               if (value.isEmpty) {
                 return 'Please enter a username';
@@ -74,8 +72,7 @@ class RegisterFormState extends State<RegisterForm> {
           ),
           TextFormField(
             decoration: const InputDecoration(
-              labelText: 'Password'
-            ),
+                labelText: 'Password', prefixIcon: Icon(Icons.lock)),
             validator: (value) {
               if (value.isEmpty) {
                 return 'Please enter a password';
@@ -85,8 +82,7 @@ class RegisterFormState extends State<RegisterForm> {
           ),
           TextFormField(
             decoration: const InputDecoration(
-              labelText: 'Repeat password'
-            ),
+                labelText: 'Repeat password', prefixIcon: Icon(Icons.lock)),
             validator: (value) {
               if (value.isEmpty) {
                 return 'Password not the same';
@@ -98,8 +94,9 @@ class RegisterFormState extends State<RegisterForm> {
             padding: const EdgeInsets.symmetric(vertical: 16.0),
             child: RaisedButton(
               onPressed: () {
-                if (_formKey.currentState.validate()){
-                  Scaffold.of(context).showSnackBar(SnackBar(content: Text('Processing Data')));
+                if (_formKey.currentState.validate()) {
+                  Scaffold.of(context)
+                      .showSnackBar(SnackBar(content: Text('Processing Data')));
                 }
               },
               child: Text('Create account'),
@@ -110,4 +107,3 @@ class RegisterFormState extends State<RegisterForm> {
     );
   }
 }
-
