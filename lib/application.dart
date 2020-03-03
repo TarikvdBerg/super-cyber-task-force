@@ -1,4 +1,4 @@
-import 'package:SCTFPasswordManager/register.dart';
+import 'package:SCTFPasswordManager/views/register.dart';
 import 'package:SCTFPasswordManager/views/login.dart';
 import 'package:SCTFPasswordManager/views/password_view.dart';
 import 'package:flutter/cupertino.dart';
@@ -32,7 +32,7 @@ class SCTFPasswordManager extends StatelessWidget {
         initialRoute: "login",
         routes: {
           "login": (context) => LoginView(),
-          'register': (context) => RegisterWidget(),
+          'register': (context) => RegisterView(),
           "dashboard": (context) => PasswordView()
         },
         home: Scaffold(),
