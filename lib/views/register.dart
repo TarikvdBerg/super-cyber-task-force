@@ -40,8 +40,38 @@ class RegisterForm extends StatefulWidget {
   }
 }
 
+_passwordFormField(String label, bool showPassword, handleShowHidePassword) => TextFormField(
+  decoration: InputDecoration(
+    labelText: label,
+    prefixIcon: IconButton(
+      icon: Icon(Icons.lock),
+      onPressed: () {},
+    ),
+    suffixIcon: IconButton(
+      icon: showPassword ? Icon(Icons.visibility_off) : Icon(Icons.visibility),
+      onPressed: () => handleShowHidePassword(showPassword),
+    ),
+  ),
+  obscureText: !showPassword,
+  validator: (val) => val == null ? "Please enter a password" : "Password is empty",
+);
+
 class RegisterFormState extends State<RegisterForm> {
   final _formKey = GlobalKey<FormState>();
+  bool _passwordShown = false;
+  bool _passwordConfirmationShown = false;
+
+  void _showHidePassword(bool show) {
+    setState(() {
+      this._passwordShown = !show;
+    });
+  }
+
+  void _showHidePasswordConfirmation(bool show) {
+    setState(() {
+      this._passwordConfirmationShown = !show;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -70,26 +100,8 @@ class RegisterFormState extends State<RegisterForm> {
               return null;
             },
           ),
-          TextFormField(
-            decoration: const InputDecoration(
-                labelText: 'Password', prefixIcon: Icon(Icons.lock)),
-            validator: (value) {
-              if (value.isEmpty) {
-                return 'Please enter a password';
-              }
-              return null;
-            },
-          ),
-          TextFormField(
-            decoration: const InputDecoration(
-                labelText: 'Repeat password', prefixIcon: Icon(Icons.lock)),
-            validator: (value) {
-              if (value.isEmpty) {
-                return 'Password not the same';
-              }
-              return null;
-            },
-          ),
+          _passwordFormField("Password", this._passwordShown, this._showHidePassword),
+          _passwordFormField("Confirm password", this._passwordConfirmationShown, this._showHidePasswordConfirmation),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 16.0),
             child: RaisedButton(
