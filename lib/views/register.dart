@@ -82,10 +82,11 @@ class RegisterFormState extends State<RegisterForm> {
         children: <Widget>[
           TextFormField(
             decoration: const InputDecoration(
-                labelText: 'Email adress', prefixIcon: Icon(Icons.email)),
+                labelText: 'Email address', prefixIcon: Icon(Icons.email)),
+            keyboardType: TextInputType.emailAddress,
             validator: (value) {
               if (value.isEmpty) {
-                return 'Please enter a email adress';
+                return 'Please enter a email address';
               }
               return null;
             },
