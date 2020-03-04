@@ -21,7 +21,9 @@ class _NavigationButtonState extends State<NavigationButton> {
     return Container(
       width: MediaQuery.of(context).size.width,
       child: FlatButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.pushNamed(context, this.widget.targetURI);
+          },
           padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
           hoverColor: Theme.of(context).primaryColor,
           child: Row(children: <Widget>[

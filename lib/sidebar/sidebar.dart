@@ -38,7 +38,7 @@ class _SideBarState extends State<SideBar> {
               NavigationButton(title: "Add Password", iconData: Icons.add),
               NavigationButton(title: "My Profile", iconData: Icons.face),
               Spacer(),
-              NavigationButton(title: "Log Out", iconData: Icons.subdirectory_arrow_left)
+              NavigationButton(title: "Log Out", iconData: Icons.subdirectory_arrow_left, targetURI: "login",)
             ]),
           )
         ],

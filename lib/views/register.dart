@@ -90,17 +90,34 @@ class RegisterFormState extends State<RegisterForm> {
               return null;
             },
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 16.0),
-            child: RaisedButton(
-              onPressed: () {
-                if (_formKey.currentState.validate()) {
-                  Scaffold.of(context)
-                      .showSnackBar(SnackBar(content: Text('Processing Data')));
-                }
-              },
-              child: Text('Create account'),
-            ),
+          ButtonBar(
+            alignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              FlatButton(
+                  onPressed: () {Navigator.pushNamed(context, "login");},
+                  child: Text(
+                    'Back to login',
+                    style: TextStyle(
+                        color: Theme.of(context).textTheme.bodyText1.color,
+                        decoration: TextDecoration.underline),
+                  )),
+
+              RaisedButton(
+                onPressed: () {
+                  if (_formKey.currentState.validate()) {
+                    Scaffold.of(context).showSnackBar(
+                        SnackBar(content: Text('Processing Data')));
+                  }
+                  Navigator.pushNamed(context, "login");
+                },
+                textColor: Theme.of(context).textTheme.bodyText1.color,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(1.0)),
+                child: Text(
+                  'Create account',
+                ),
+              ),
+            ],
           ),
         ],
       ),
