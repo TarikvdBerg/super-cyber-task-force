@@ -17,6 +17,11 @@ class LoginView extends StatelessWidget {
                 Navigator.pushNamed(context, "register");
               },
               child: Text("Go To Register Page")),
+          FlatButton(
+              onPressed: () {
+                Navigator.pushNamed(context, "dbg");
+              },
+              child: Text("Go To Debug Page")),
         ],
       ),
     );
