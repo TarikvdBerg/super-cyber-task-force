@@ -33,7 +33,7 @@ class SCTFPasswordManager extends StatelessWidget {
         routes: {
           "login": (context) => LoginView(),
           'register': (context) => RegisterView(),
-          "dashboard": (context) => PasswordView()
+          "dashboard": (context) => PasswordView(),
         },
         home: Scaffold(),
         );
