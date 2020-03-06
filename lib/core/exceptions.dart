@@ -1,6 +1,8 @@
 
 // Exception for when a instance of an model already exists
 // on the server,.
+import 'dart:typed_data';
+
 class ModelAlreadyExistsException implements Exception {
   static String modelName;
   
@@ -39,6 +41,19 @@ class RequestNotAuthenticatedException implements Exception {
 
   String errorMessage() {
     return "Request to $endpoint wasn't authenticated";
+  }
+}
+
+// Exception for when a request to a resource is forbidden due to user access constraints
+class RequestForbiddenException implements Exception {
+  static String endpoint;
+
+  RequestForbiddenException(String endp) {
+    endpoint = endp;
+  }
+
+  String errorMessage() {
+    return "Access to resource at $endpoint forbidden";
   }
 }
 

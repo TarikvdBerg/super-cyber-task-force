@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:SCTFPasswordManager/passwords/group.dart';
 
 class UserModel {
   final String id;
@@ -7,7 +10,13 @@ class UserModel {
   final String lastName;
   final String displayName;
 
-  UserModel({this.id, this.userName, this.eMail, this.firstName, this.lastName, this.displayName});
+  UserModel(
+      {this.id,
+      this.userName,
+      this.eMail,
+      this.firstName,
+      this.lastName,
+      this.displayName});
 
   Map<String, String> toJSON() {
     return {
@@ -22,13 +31,12 @@ class UserModel {
 
   factory UserModel.fromJSON(Map<String, dynamic> json) {
     return UserModel(
-      id: json['id'],
-      userName: json['username'],
-      eMail: json['email'],
-      firstName: json['first_name'],
-      lastName: json['last_name'],
-      displayName: json['display_name']
-    );
+        id: json['id'],
+        userName: json['username'],
+        eMail: json['email'],
+        firstName: json['first_name'],
+        lastName: json['last_name'],
+        displayName: json['display_name']);
   }
 
   @override
@@ -38,18 +46,23 @@ class UserModel {
 }
 
 class PasswordGroupModel {
-
   final String id;
   final String name;
 
   PasswordGroupModel({this.id, this.name});
 
   Map<String, String> toJSON() {
-    return {};
+    return {
+      "id": this.id,
+      "enc_name": this.name
+    };
   }
 
   factory PasswordGroupModel.fromJSON(Map<String, dynamic> json) {
-    return PasswordGroupModel();
+    return PasswordGroupModel(
+      id: json["id"],
+      name: json["enc_name"]
+    );
   }
 
   @override
@@ -58,15 +71,26 @@ class PasswordGroupModel {
   }
 }
 
-class PasswordModel {
+List<PasswordGroupModel> parsePasswordGroups(String body) {
+  final parsed = json.decode(body).cast<Map<String, dynamic>>();
+  return parsed
+      .map<PasswordGroupModel>((json) => PasswordGroupModel.fromJSON(json))
+      .toList();
+}
 
+class PasswordModel {
   final String id;
   final String encName;
   final String encDescription;
   final String encPassword;
   final String group;
 
-  PasswordModel({this.id, this.encName, this.encDescription, this.encPassword, this.group});
+  PasswordModel(
+      {this.id,
+      this.encName,
+      this.encDescription,
+      this.encPassword,
+      this.group});
 
   Map<String, String> toJSON() {
     return {
@@ -74,7 +98,7 @@ class PasswordModel {
       "enc_name": this.encName,
       "enc_description": this.encDescription,
       "enc_password": this.encPassword,
-      "group": this.group
+      "parent_group": this.group
     };
   }
 
@@ -84,7 +108,7 @@ class PasswordModel {
       encName: json["enc_name"],
       encDescription: json["enc_description"],
       encPassword: json["enc_password"],
-      group: json["group"],
+      group: json["parent_group"],
     );
   }
 
@@ -92,4 +116,11 @@ class PasswordModel {
   String toString() {
     return "Password: $encName";
   }
+}
+
+List<PasswordModel> parsePasswords(String body) {
+  final parsed = json.decode(body).cast<Map<String, dynamic>>();
+  return parsed
+      .map<PasswordModel>((json) => PasswordModel.fromJSON(json))
+      .toList();
 }

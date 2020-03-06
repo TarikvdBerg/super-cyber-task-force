@@ -5,12 +5,15 @@ import 'dart:io';
 
 import 'package:SCTFPasswordManager/core/exceptions.dart';
 import 'package:SCTFPasswordManager/core/models.dart';
+import 'package:SCTFPasswordManager/passwords/password.dart';
 import 'package:http/http.dart' as http;
 
 class API {
   static String baseURL = "http://homeland.nvmtech.nl:80/"; // The URL to send all of the requests to
   static String apiURL = baseURL + "api/"; // The endpoint to send API requests to
   static String userURL = apiURL + "users/"; // The endpoint to send user related requests to
+  static String passwordGroupURL = apiURL + "pw_groups/"; // The endpoint to send password group related requests to
+  static String passwordURL = apiURL + "passwords/"; // The endpoint to send user related requests to
 
   String authToken; // The current authentication token for the API, if null the API is not
                     // authenticated.
@@ -45,7 +48,7 @@ class API {
 
       // Handle unauthenticated requests
       case 403:
-        throw RequestNotAuthenticatedException(resp.request.url.toString());
+        throw RequestForbiddenException(resp.request.url.toString());
         break;
       
       // Handle not found request
@@ -59,7 +62,7 @@ class API {
   // It throws an Exception is anything went wrong during the authentication process.
   Future<bool> authenticate(String username, String password) async {
     if (authToken != null) {
-      throw Exception("Client already authenticated, use .deAuthenticate to logout first");
+      return true;
     }
 
     Map<String, String> payload = {"username": username, "password": password};
@@ -129,8 +132,8 @@ class API {
   // failure of the action.
   Future<UserModel> updateUser(UserModel user) async {
     String uid = user.id;
-    final resp = await http.put(userURL+"$uid/", body: user.toJSON(), headers: getHeaders());
-
+    final resp = await http.put(userURL+"$uid/", body: json.encode(user.toJSON()), headers: getHeaders());
+    
     verifyCommonResponses(resp);
 
     if (resp.statusCode == 200) {
@@ -156,35 +159,132 @@ class API {
     }
   }
 
+  Future<List<PasswordGroupModel>> fetchAllGroups() async {
+    final resp = await http.get(passwordGroupURL, headers: getHeaders());
+
+    verifyCommonResponses(resp);
+
+    if (resp.statusCode == 200) {
+      return parsePasswordGroups(resp.body);
+    } else {
+      throw Exception();
+    }
+  }
+
   Future<PasswordGroupModel> fetchGroup(String id) async {
+    final resp = await http.get(passwordGroupURL+"$id/", headers: getHeaders());
 
+    verifyCommonResponses(resp);
+
+    if (resp.statusCode == 200) {
+      return PasswordGroupModel.fromJSON(json.decode(resp.body));
+    } else {
+      throw Exception();
+    }
   }
 
-  Future<PasswordGroupModel> createGroup(PasswordGroupModel group) {
+  Future<PasswordGroupModel> createGroup(PasswordGroupModel group) async {
+    final resp = await http.post(passwordGroupURL, body: json.encode(group.toJSON()), headers: getHeaders());
+    verifyCommonResponses(resp);
 
+    if (resp.statusCode == 200) {
+      return PasswordGroupModel.fromJSON(json.decode(resp.body));
+    } else {
+      throw Exception();
+    }
   }
 
-  Future<PasswordGroupModel> updateGroup(PasswordGroupModel group) {
-
-  }
-
-  Future<bool> deleteGroup(PasswordGroupModel group) {
-
-  }
-
-  Future<PasswordModel> fetchPassword(String id) {
-
-  }
-
-  Future<PasswordModel> createPassword(PasswordModel password) {
+  Future<PasswordGroupModel> updateGroup(PasswordGroupModel group) async {
+    String pgid = group.id;
+    final resp = await http.put(passwordGroupURL+"$pgid/", body: json.encode(group.toJSON()), headers: getHeaders());
     
+    verifyCommonResponses(resp);
+
+    if (resp.statusCode == 200) {
+      return PasswordGroupModel.fromJSON(json.decode(resp.body));
+    } else {
+      throw Exception();
+    }
   }
 
-  Future<PasswordModel> updatePassword(PasswordModel password) {
-    
+  Future<bool> deleteGroup(PasswordGroupModel group) async {
+    String pgid = group.id;
+    final resp = await http.delete(passwordGroupURL+"$pgid/", headers: getHeaders());
+
+    verifyCommonResponses(resp);
+
+    if (resp.statusCode == 200) {
+      return true;
+    } else {
+      throw Exception();
+    }
   }
 
-  Future<bool> deletePassword(PasswordModel password) {
+  Future<List<PasswordModel>> fetchAllPasswords() async {
+    final resp = await http.get(passwordURL, headers: getHeaders());
+
+    verifyCommonResponses(resp);
+
+    print(resp.statusCode);
+
+    if (resp.statusCode == 200) {
+      return parsePasswords(resp.body);
+    } else {
+      throw Exception();
+    }
+  }
+
+  Future<PasswordModel> fetchPassword(String id) async {
+    final resp = await http.get(passwordURL+"$id/", headers: getHeaders());
+
+    verifyCommonResponses(resp);
+
+    if (resp.statusCode == 200) {
+      return PasswordModel.fromJSON(json.decode(resp.body));
+    } else {
+      throw Exception();
+    }
+  }
+
+  Future<PasswordModel> createPassword(PasswordModel password) async {
+    final resp = await http.post(passwordURL, body: json.encode(password.toJSON()), headers: getHeaders());
     
+    verifyCommonResponses(resp, {"id": "none"});
+
+    if (resp.statusCode == 200) {
+      return PasswordModel.fromJSON(json.decode(resp.body));
+    } else {
+      throw Exception();
+    }
+  }
+
+  Future<PasswordModel> updatePassword(PasswordModel password) async {
+    String pid = password.id;
+    final resp = await http.put(passwordURL+"$pid/", body: json.encode(password.toJSON()), headers: getHeaders());
+
+    try {
+      verifyCommonResponses(resp, {"id": pid});
+    } catch (e) {
+      print(e.errorMessage());
+    }
+    print(resp.statusCode);
+    if (resp.statusCode == 200) {
+      return PasswordModel.fromJSON(json.decode(resp.body));
+    } else {  
+      throw Exception();
+    }
+  }
+
+  Future<bool> deletePassword(PasswordModel password) async {
+    String pid = password.id;
+    final resp = await http.delete(passwordURL+"$pid/", headers: getHeaders());
+
+    verifyCommonResponses(resp);
+
+    if (resp.statusCode == 200) {
+      return true;
+    } else {
+      throw Exception();
+    }
   }
 }

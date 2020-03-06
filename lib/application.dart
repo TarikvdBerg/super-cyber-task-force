@@ -1,4 +1,3 @@
-import 'package:SCTFPasswordManager/views/debug.dart';
 import 'package:SCTFPasswordManager/views/register.dart';
 import 'package:SCTFPasswordManager/views/login.dart';
 import 'package:SCTFPasswordManager/views/password_view.dart';
@@ -35,7 +34,6 @@ class SCTFPasswordManager extends StatelessWidget {
           "login": (context) => LoginView(),
           'register': (context) => RegisterView(),
           "dashboard": (context) => PasswordView(),
-          "dbg": (context) => DebugView(),
         },
         home: Scaffold(),
         );
