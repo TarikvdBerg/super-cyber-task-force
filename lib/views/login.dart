@@ -76,9 +76,9 @@ class LoginFormState extends State<LoginForm> {
                 icon: Icon(Icons.lock),
                 labelText: 'Password',
                 suffixIcon: IconButton(
-                    icon:
-                        Icon(_obscureText ? Icons.visibility_off : Icons.visibility),
-                        onPressed: this._toggle)),
+                    icon: Icon(
+                        _obscureText ? Icons.visibility_off : Icons.visibility),
+                    onPressed: this._toggle)),
             validator: (value) {
               if (value.isEmpty) {
                 return "Please enter your password";
@@ -89,14 +89,24 @@ class LoginFormState extends State<LoginForm> {
             alignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               FlatButton(
-                  onPressed: () {Navigator.pushNamed(context, "register");},
+                  onPressed: () {
+                    Navigator.pushNamed(context, "register");
+                  },
                   child: Text(
                     'create account',
                     style: TextStyle(
                         color: Theme.of(context).textTheme.bodyText1.color,
                         decoration: TextDecoration.underline),
                   )),
+              FlatButton(
+                  onPressed: () {
+                    Navigator.pushNamed(context, "resetpassword");
+                  },
+                  child: Text('Reset password', style: TextStyle(
+                    color: Theme.of(context).textTheme.bodyText1.color,
+                    decoration: TextDecoration.underline),
 
+                  )),
               RaisedButton(
                 onPressed: () {
                   if (_loginForm.currentState.validate()) {
