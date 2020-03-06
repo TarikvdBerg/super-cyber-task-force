@@ -41,3 +41,16 @@ class RequestNotAuthenticatedException implements Exception {
     return "Request to $endpoint wasn't authenticated";
   }
 }
+
+// Exception for when an request doesn't match the servers expectations
+class BadRequestException implements Exception {
+  static String message;
+
+  BadRequestException(String mess) {
+    message = mess;
+  }
+
+  String errorMessage() {
+    return message;
+  }
+}

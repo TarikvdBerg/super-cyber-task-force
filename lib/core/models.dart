@@ -36,3 +36,60 @@ class UserModel {
     return "User $userName with ID: $id";
   }
 }
+
+class PasswordGroupModel {
+
+  final String id;
+  final String name;
+
+  PasswordGroupModel({this.id, this.name});
+
+  Map<String, String> toJSON() {
+    return {};
+  }
+
+  factory PasswordGroupModel.fromJSON(Map<String, dynamic> json) {
+    return PasswordGroupModel();
+  }
+
+  @override
+  String toString() {
+    return "Password Group: $name";
+  }
+}
+
+class PasswordModel {
+
+  final String id;
+  final String encName;
+  final String encDescription;
+  final String encPassword;
+  final String group;
+
+  PasswordModel({this.id, this.encName, this.encDescription, this.encPassword, this.group});
+
+  Map<String, String> toJSON() {
+    return {
+      "id": this.id,
+      "enc_name": this.encName,
+      "enc_description": this.encDescription,
+      "enc_password": this.encPassword,
+      "group": this.group
+    };
+  }
+
+  factory PasswordModel.fromJSON(Map<String, dynamic> json) {
+    return PasswordModel(
+      id: json["id"],
+      encName: json["enc_name"],
+      encDescription: json["enc_description"],
+      encPassword: json["enc_password"],
+      group: json["group"],
+    );
+  }
+
+  @override
+  String toString() {
+    return "Password: $encName";
+  }
+}

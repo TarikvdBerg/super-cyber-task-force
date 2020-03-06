@@ -8,7 +8,7 @@ import 'package:SCTFPasswordManager/core/models.dart';
 import 'package:http/http.dart' as http;
 
 class API {
-  static String baseURL = "http://homeland.nvmtech.nl/"; // The URL to send all of the requests to
+  static String baseURL = "http://homeland.nvmtech.nl:80/"; // The URL to send all of the requests to
   static String apiURL = baseURL + "api/"; // The endpoint to send API requests to
   static String userURL = apiURL + "users/"; // The endpoint to send user related requests to
 
@@ -35,6 +35,14 @@ class API {
   void verifyCommonResponses(http.Response resp, [Map<String, dynamic> data]) {
 
     switch (resp.statusCode) {
+      case 400:
+        throw BadRequestException(resp.body);
+        break;
+
+      case 401:
+        throw RequestNotAuthenticatedException(resp.request.url.toString());
+        break;
+
       // Handle unauthenticated requests
       case 403:
         throw RequestNotAuthenticatedException(resp.request.url.toString());
@@ -44,39 +52,38 @@ class API {
       case 404:
         throw ModelDoesNotExistException(data['id']);
     }
-
   }
 
   // authenticate sends an authentication request to the backend. It takes in an username and password
   // and sets the local authToken variable to the retrieved token if the request was succesfull.
   // It throws an Exception is anything went wrong during the authentication process.
-  void authenticate(String username, String password) async {
+  Future<bool> authenticate(String username, String password) async {
     if (authToken != null) {
       throw Exception("Client already authenticated, use .deAuthenticate to logout first");
     }
 
     Map<String, String> payload = {"username": username, "password": password};
 
-    final resp = await http.post(baseURL+"auth/login", body: json.encode(payload));
+    final resp = await http.post(baseURL+"auth/login", body: json.encode(payload), headers: getHeaders());
+
+    verifyCommonResponses(resp);
     
     if (resp.statusCode == 200) {
-      print("Authenticatedd");
-      
-      Map<String, String> tokenData = json.decode(resp.body);
-
-      this.authToken = tokenData["authentication_token"];
+      dynamic tokenData = json.decode(resp.body);
+      this.authToken = tokenData["token"];
+      return true;
     } else {
-      throw Exception("User authentication failed");
+      throw Exception(resp.statusCode);
     }
   }
 
-  // Deletes the local authentication token and notifies the server that the
-  // authentication token can be invalidated.
-  // TODO: Implement
-  void deAuthenticate() {
+  // Deletes the local authentication token
+  deAuthenticate() {
     if (authToken == null) {
       throw Exception("Client is not authenticated");
     }
+
+    this.authToken = null;
   }
 
   // Retrieves user information from the server. Takes in an UUID and
@@ -115,5 +122,69 @@ class API {
         throw Exception({"status": resp.statusCode, "reason": resp.body});
       }
     }
+  }
+
+  // Updates the user information on the server. Takes in a UserModel and returns
+  // an updated UserModel if the action was succesfull, throws exceptions based on
+  // failure of the action.
+  Future<UserModel> updateUser(UserModel user) async {
+    String uid = user.id;
+    final resp = await http.put(userURL+"$uid/", body: user.toJSON(), headers: getHeaders());
+
+    verifyCommonResponses(resp);
+
+    if (resp.statusCode == 200) {
+      return UserModel.fromJSON(json.decode(resp.body));
+    } else {
+      throw Exception('Unknown error');
+    }
+  }
+
+  // Removes a user account from the server, takes in a UserModel and returns true
+  // if the action was succesfull. Throws Exceptions if anything goes wrong that
+  // needs explanation.
+  Future<bool> deleteUser(UserModel user) async {
+    String uid = user.id;
+    final resp = await http.delete(userURL+"$uid/", headers: getHeaders());
+
+    verifyCommonResponses(resp);
+
+    if (resp.statusCode == 200) {
+      return true;
+    } else {
+      throw Exception("Failed to delete user");
+    }
+  }
+
+  Future<PasswordGroupModel> fetchGroup(String id) async {
+
+  }
+
+  Future<PasswordGroupModel> createGroup(PasswordGroupModel group) {
+
+  }
+
+  Future<PasswordGroupModel> updateGroup(PasswordGroupModel group) {
+
+  }
+
+  Future<bool> deleteGroup(PasswordGroupModel group) {
+
+  }
+
+  Future<PasswordModel> fetchPassword(String id) {
+
+  }
+
+  Future<PasswordModel> createPassword(PasswordModel password) {
+    
+  }
+
+  Future<PasswordModel> updatePassword(PasswordModel password) {
+    
+  }
+
+  Future<bool> deletePassword(PasswordModel password) {
+    
   }
 }
