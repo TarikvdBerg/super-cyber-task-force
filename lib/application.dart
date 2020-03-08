@@ -36,10 +36,7 @@ class SCTFPasswordManager extends StatelessWidget {
           "login": (context) => LoginView(),
           'register': (context) => RegisterView(),
           "dashboard": (context) => PasswordView(),
-<<<<<<< HEAD
-=======
           'resetpassword': (context) => ResetPasswordView(),
->>>>>>> 371abfdaab93838a93305357ddd72c2b6250c2a4
         },
         home: Scaffold(),
         );

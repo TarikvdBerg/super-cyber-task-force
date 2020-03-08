@@ -5,7 +5,6 @@ import 'dart:io';
 
 import 'package:SCTFPasswordManager/core/exceptions.dart';
 import 'package:SCTFPasswordManager/core/models.dart';
-import 'package:SCTFPasswordManager/passwords/password.dart';
 import 'package:http/http.dart' as http;
 
 class API {

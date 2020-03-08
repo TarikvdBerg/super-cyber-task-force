@@ -59,7 +59,6 @@ class LoginFormState extends State<LoginForm> {
       key: _loginForm,
       child: Column(
         children: <Widget>[
-<<<<<<< HEAD
           TextFormField(
               decoration: const InputDecoration(
                 icon: Icon(Icons.person_outline),
@@ -125,23 +124,6 @@ class LoginFormState extends State<LoginForm> {
               ),
             ],
           ),
-=======
-          FlatButton(
-              onPressed: () {
-                Navigator.pushNamed(context, "dashboard");
-              },
-              child: Text("Go To Dash")),
-          FlatButton(
-              onPressed: () {
-                Navigator.pushNamed(context, "register");
-              },
-              child: Text("Go To Register Page")),
-          FlatButton(
-              onPressed: () {
-                Navigator.pushNamed(context, "dbg");
-              },
-              child: Text("Go To Debug Page")),
->>>>>>> feature/api
         ],
       ),
     );

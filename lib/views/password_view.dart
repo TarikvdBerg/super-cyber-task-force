@@ -1,5 +1,7 @@
+import 'package:SCTFPasswordManager/core/models.dart';
 import 'package:SCTFPasswordManager/passwords/group.dart';
 import 'package:SCTFPasswordManager/passwords/password.dart';
+import 'package:SCTFPasswordManager/passwords/view_password.dart';
 import 'package:SCTFPasswordManager/sidebar/sidebar.dart';
 import 'package:flutter/material.dart';
 
