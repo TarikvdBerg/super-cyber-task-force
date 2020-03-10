@@ -83,6 +83,7 @@ class LoginFormState extends State<LoginForm> {
               if (value.isEmpty) {
                 return "Please enter your password";
               }
+              return null;
             },
           ),
           ButtonBar(

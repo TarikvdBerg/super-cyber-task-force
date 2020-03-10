@@ -1,7 +1,5 @@
 import 'dart:convert';
 
-import 'package:SCTFPasswordManager/passwords/group.dart';
-
 class UserModel {
   final String id;
   final String userName;

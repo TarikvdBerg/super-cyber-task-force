@@ -1,7 +1,5 @@
-import 'package:SCTFPasswordManager/core/models.dart';
 import 'package:SCTFPasswordManager/passwords/group.dart';
 import 'package:SCTFPasswordManager/passwords/password.dart';
-import 'package:SCTFPasswordManager/passwords/view_password.dart';
 import 'package:SCTFPasswordManager/sidebar/sidebar.dart';
 import 'package:flutter/material.dart';
 
@@ -80,8 +78,10 @@ class PasswordView extends StatelessWidget {
                         ),
                       ],
                     ),
-                    PasswordGroup(groupName: "Cool Password Group", passwordList: <Password>[
-                      Password(
+                    PasswordGroup(
+                      groupName: "Cool Password Group",
+                      passwordList: <Password>[
+                        Password(
                           userName: "User1",
                           encPassword: "TSE",
                           description: "Test",
@@ -89,7 +89,8 @@ class PasswordView extends StatelessWidget {
                               "https://cdn1.iconfinder.com/data/icons/logotypes/32/youtube-512.png",
                           name: "Youtube",
                         ),
-                    ],),
+                      ],
+                    ),
                   ]),
                 )
               ],
