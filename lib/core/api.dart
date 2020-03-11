@@ -34,7 +34,7 @@ class API {
 
   // Verifies common issues with the responses from the server such as 404, 500,
   // 403 and more. 
-  void verifyCommonResponses(http.Response resp, [Map<String, dynamic> data]) {
+  void verifyCommonResponses(http.Response resp) {
 
     switch (resp.statusCode) {
       case 400:
@@ -52,7 +52,11 @@ class API {
       
       // Handle not found request
       case 404:
-        throw ModelDoesNotExistException(data['id']);
+        throw ModelDoesNotExistException("");
+
+      // Handle internal server errors
+      case 500:
+        throw ServerErrorException(resp.body);
     }
   }
 
@@ -75,16 +79,12 @@ class API {
       this.authToken = tokenData["token"];
       return true;
     } else {
-      throw Exception(resp.statusCode);
+      throw UnknownResponseException(resp.statusCode, resp.body);
     }
   }
 
   // Deletes the local authentication token
   deAuthenticate() {
-    if (authToken == null) {
-      throw Exception("Client is not authenticated");
-    }
-
     this.authToken = null;
   }
 
@@ -97,10 +97,8 @@ class API {
 
     if (resp.statusCode == 200) {
       return UserModel.fromJSON(json.decode(resp.body));
-    } else if (resp.statusCode == 404) {
-      throw ModelDoesNotExistException(id);
     } else {
-      throw Exception("Failed to load user");
+      throw UnknownResponseException(resp.statusCode, resp.body);
     }
   }
 
@@ -121,7 +119,7 @@ class API {
       if (resp.statusCode == 400 && resp.body.contains("username already exists")) {
         throw ModelAlreadyExistsException("User");
       } else {
-        throw Exception({"status": resp.statusCode, "reason": resp.body});
+        throw UnknownResponseException(resp.statusCode, resp.body);
       }
     }
   }
@@ -138,7 +136,7 @@ class API {
     if (resp.statusCode == 200) {
       return UserModel.fromJSON(json.decode(resp.body));
     } else {
-      throw Exception('Unknown error');
+      throw UnknownResponseException(resp.statusCode, resp.body);
     }
   }
 
@@ -154,10 +152,12 @@ class API {
     if (resp.statusCode == 200) {
       return true;
     } else {
-      throw Exception("Failed to delete user");
+      throw UnknownResponseException(resp.statusCode, resp.body);
     }
   }
 
+  // Fetches all groups from the server, returns a list of PasswordGroupModels if
+  // the fetch was succesfull, throws exceptions based on what went wrong
   Future<List<PasswordGroupModel>> fetchAllGroups() async {
     final resp = await http.get(passwordGroupURL, headers: getHeaders());
 
@@ -166,10 +166,12 @@ class API {
     if (resp.statusCode == 200) {
       return parsePasswordGroups(resp.body);
     } else {
-      throw Exception();
+      throw UnknownResponseException(resp.statusCode, resp.body);
     }
   }
 
+  // Fetches a single group from the server identified by the provided ID. Returns
+  // eihther the passwordgroupmodel or throws an exceptiono according to what went wrong.
   Future<PasswordGroupModel> fetchGroup(String id) async {
     final resp = await http.get(passwordGroupURL+"$id/", headers: getHeaders());
 
@@ -178,10 +180,12 @@ class API {
     if (resp.statusCode == 200) {
       return PasswordGroupModel.fromJSON(json.decode(resp.body));
     } else {
-      throw Exception();
+      throw UnknownResponseException(resp.statusCode, resp.body);
     }
   }
 
+  // Creates a new password group based on the provided PasswordGrouppModel. Returns the
+  // created group if successfull otherwise throws an exception based on what went wrong.
   Future<PasswordGroupModel> createGroup(PasswordGroupModel group) async {
     final resp = await http.post(passwordGroupURL, body: json.encode(group.toJSON()), headers: getHeaders());
     verifyCommonResponses(resp);
@@ -189,10 +193,12 @@ class API {
     if (resp.statusCode == 200) {
       return PasswordGroupModel.fromJSON(json.decode(resp.body));
     } else {
-      throw Exception();
+      throw UnknownResponseException(resp.statusCode, resp.body);
     }
   }
 
+  // Updates a passwordgroup based on the group model provided. Returns the newly udated
+  // PasswordGroup if succesful otherwise throws an exception based on what went wrong.
   Future<PasswordGroupModel> updateGroup(PasswordGroupModel group) async {
     String pgid = group.id;
     final resp = await http.put(passwordGroupURL+"$pgid/", body: json.encode(group.toJSON()), headers: getHeaders());
@@ -202,10 +208,12 @@ class API {
     if (resp.statusCode == 200) {
       return PasswordGroupModel.fromJSON(json.decode(resp.body));
     } else {
-      throw Exception();
+      throw UnknownResponseException(resp.statusCode, resp.body);
     }
   }
 
+  // Deletes a PasswordGroup from the server, returns true if succesfull or throws an
+  // exception based on what went wrong.
   Future<bool> deleteGroup(PasswordGroupModel group) async {
     String pgid = group.id;
     final resp = await http.delete(passwordGroupURL+"$pgid/", headers: getHeaders());
@@ -215,10 +223,12 @@ class API {
     if (resp.statusCode == 200) {
       return true;
     } else {
-      throw Exception();
+      throw UnknownResponseException(resp.statusCode, resp.body);
     }
   }
 
+  // Fetches all passwords from the server, returns a List of PasswordModel if succesful,
+  // throws exceptions based on what went wrong.
   Future<List<PasswordModel>> fetchAllPasswords() async {
     final resp = await http.get(passwordURL, headers: getHeaders());
 
@@ -229,10 +239,13 @@ class API {
     if (resp.statusCode == 200) {
       return parsePasswords(resp.body);
     } else {
-      throw Exception();
+      throw UnknownResponseException(resp.statusCode, resp.body);
     }
   }
 
+  // Fetches a single password from the databse identified by the provided ID,
+  // returns a PasswordModel if succesfull or throws exceptions based on what went
+  // wrongs
   Future<PasswordModel> fetchPassword(String id) async {
     final resp = await http.get(passwordURL+"$id/", headers: getHeaders());
 
@@ -241,28 +254,33 @@ class API {
     if (resp.statusCode == 200) {
       return PasswordModel.fromJSON(json.decode(resp.body));
     } else {
-      throw Exception();
+      throw UnknownResponseException(resp.statusCode, resp.body);
     }
   }
 
+  // Creates a new password on the server based on the provided PasswordModel, returns
+  // the newly generated PasswordModel if succesful, throws exceptions based on 
+  // what went wrong.
   Future<PasswordModel> createPassword(PasswordModel password) async {
     final resp = await http.post(passwordURL, body: json.encode(password.toJSON()), headers: getHeaders());
     
-    verifyCommonResponses(resp, {"id": "none"});
+    verifyCommonResponses(resp);
 
     if (resp.statusCode == 200) {
       return PasswordModel.fromJSON(json.decode(resp.body));
     } else {
-      throw Exception();
+      throw UnknownResponseException(resp.statusCode, resp.body);
     }
   }
 
+  // Updates a Password based on the model provided. Returns the newly updated
+  // PasswordModel if succesful otherwise throws an exception based on what went wrong.
   Future<PasswordModel> updatePassword(PasswordModel password) async {
     String pid = password.id;
     final resp = await http.put(passwordURL+"$pid/", body: json.encode(password.toJSON()), headers: getHeaders());
 
     try {
-      verifyCommonResponses(resp, {"id": pid});
+      verifyCommonResponses(resp);
     } catch (e) {
       print(e.errorMessage());
     }
@@ -270,10 +288,12 @@ class API {
     if (resp.statusCode == 200) {
       return PasswordModel.fromJSON(json.decode(resp.body));
     } else {  
-      throw Exception();
+      throw UnknownResponseException(resp.statusCode, resp.body);
     }
   }
 
+  /// Deletes a Password from the server, returns true if succesfull or throws an
+  // exception based on what went wrong.
   Future<bool> deletePassword(PasswordModel password) async {
     String pid = password.id;
     final resp = await http.delete(passwordURL+"$pid/", headers: getHeaders());
@@ -283,7 +303,7 @@ class API {
     if (resp.statusCode == 200) {
       return true;
     } else {
-      throw Exception();
+      throw UnknownResponseException(resp.statusCode, resp.body);
     }
   }
 }
