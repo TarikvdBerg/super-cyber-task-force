@@ -1,22 +1,22 @@
-import 'package:SCTFPasswordManager/sidebar/profile.dart';
-import 'package:SCTFPasswordManager/sidebar/navigation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+
+import 'package:SCTFPasswordManager/sidebar/profile.dart';
+import 'package:SCTFPasswordManager/sidebar/navigationbutton.dart';
+import 'package:SCTFPasswordManager/sidebar/actionbutton.dart';
 
 class SideBar extends StatefulWidget {
   final String userName;
   final String eMail;
 
-  SideBar({
-    Key key,
-    this.userName,
-    this.eMail
-  }) : super(key: key);
+  SideBar({Key key, this.userName, this.eMail}) : super(key: key);
 
   _SideBarState createState() => _SideBarState();
 }
 
 class _SideBarState extends State<SideBar> {
+  void confirmLogOut() {}
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -25,10 +25,9 @@ class _SideBarState extends State<SideBar> {
       height: MediaQuery.of(context).size.height,
       child: Column(
         children: <Widget>[
-          SideBarProfile(userName: this.widget.userName, eMail: this.widget.eMail),
-          Divider(
-            color: Theme.of(context).dividerColor
-          ),
+          SideBarProfile(
+              userName: this.widget.userName, eMail: this.widget.eMail),
+          Divider(color: Theme.of(context).dividerColor),
           Container(
             margin: EdgeInsets.only(top: 10),
             width: MediaQuery.of(context).size.width,
@@ -41,7 +40,12 @@ class _SideBarState extends State<SideBar> {
               //NavigationButton(title: "Remove group", iconData: Icons.remove_circle , targetURI: "RemoveGroup",),
               //NavigationButton(title: "Edit group", iconData: Icons.edit , targetURI: "EditGroup",),
               Spacer(),
-              NavigationButton(title: "Log Out", iconData: Icons.subdirectory_arrow_left, targetURI: "login",),
+              ActionButton(
+                title: "Log Out",
+                iconData: Icons.exit_to_app,
+                iconColor: Colors.red,
+                action: confirmLogOut,
+              ),
             ]),
           )
         ],
