@@ -1,6 +1,8 @@
 
 // Exception for when a instance of an model already exists
 // on the server,.
+import 'package:flutter/animation.dart';
+
 class ModelAlreadyExistsException implements Exception {
   static String modelName;
   
@@ -65,5 +67,34 @@ class BadRequestException implements Exception {
 
   String errorMessage() {
     return message;
+  }
+}
+
+// Exception to handle homeland internal server errors
+class ServerErrorException implements Exception {
+  String responseText;
+
+  ServerErrorException(String text) {
+    this.responseText = text;
+  }
+
+  String errorMessage() {
+    return "Server had an internal error: $responseText";
+  }
+}
+
+// Exception for when the response is unknown, takes in an 
+// statusCode and serverMesssage to notify the developer.
+class UnknownResponseException implements Exception {
+  int statusCode;
+  String responseText;
+
+  UnknownResponseException(int status, String responseText) {
+    this.statusCode = status;
+    this.responseText = responseText;
+  }
+
+  String errorMessage() {
+    return "Server Status $statusCode. Message: $responseText";
   }
 }
