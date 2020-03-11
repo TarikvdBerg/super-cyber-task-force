@@ -21,20 +21,20 @@ class _NavigationButtonState extends State<NavigationButton> {
     return Container(
       width: MediaQuery.of(context).size.width,
       child: FlatButton(
-          onPressed: () {
-            Navigator.pushNamed(context, this.widget.targetURI);
-          },
-          padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-          hoverColor: Theme.of(context).primaryColor,
-          child: Row(children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(right: 15),
-              child: Icon(this.widget.iconData, color: Theme.of(context).iconTheme.color),
-            ),
-            Text(this.widget.title,
-                style: Theme.of(context).textTheme.headline6
-                )
-          ])),
+        onPressed: () {
+          Navigator.pushNamed(context, this.widget.targetURI);
+        },
+        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+        hoverColor: Theme.of(context).primaryColor,
+        child: Row(children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.only(right: 15),
+            child: Icon(this.widget.iconData,
+                color: Theme.of(context).iconTheme.color),
+          ),
+          Text(this.widget.title, style: Theme.of(context).textTheme.headline6),
+        ]),
+      ),
     );
   }
 }
