@@ -36,12 +36,9 @@ class _SideBarState extends State<SideBar> {
             child: Column(children: <Widget>[
               NavigationButton(title: "My Passwords", iconData: Icons.security),
               NavigationButton(title: "Add Password", iconData: Icons.add),
-              NavigationButton(title: "My Profile", iconData: Icons.face),
-              //NavigationButton(title: "Add group", iconData: Icons.group_add , targetURI: "AddGroup",),
-              //NavigationButton(title: "Remove group", iconData: Icons.remove_circle , targetURI: "RemoveGroup",),
-              //NavigationButton(title: "Edit group", iconData: Icons.edit , targetURI: "EditGroup",),
+              NavigationButton(title: "My Profile", iconData: Icons.face, targetURI: 'MyAccount',),
               Spacer(),
-              NavigationButton(title: "Log Out", iconData: Icons.subdirectory_arrow_left, targetURI: "login",),
+              NavigationButton(title: "Log Out", iconData: Icons.subdirectory_arrow_left, targetURI: "login",)
             ]),
           )
         ],

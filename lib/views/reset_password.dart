@@ -23,12 +23,14 @@ class ResetPasswordView extends StatelessWidget {
                       fontSize: 48,
                       fontWeight: FontWeight.w700,
                     )),
+                SizedBox(height: 20),
                 Text('Please enter your email, if the email is correct you\'ll receive an e-mail shortly',
                   style: TextStyle(
                     color: Theme.of(context).textTheme.headline2.color,
                     fontSize: 20,
                   )
                 ),
+                SizedBox(height: 20),
                 PasswordResetForm()
               ],
             ),

@@ -130,30 +130,3 @@ class LoginFormState extends State<LoginForm> {
     );
   }
 }
-
-//class LoginView extends StatelessWidget {
-//  @override
-//  Widget build(BuildContext context) {
-//    return
-//      ButtonBar(
-//      alignment: MainAxisAlignment.center,
-//      children: <Widget>[
-//        FlatButton(
-//          onPressed: () {},
-//          child: Text (
-//            'create account',
-//            style: TextStyle(color: Theme.of(context).textTheme.bodyText1.color, decoration: TextDecoration.underline),
-//          )
-//          ),
-//      RaisedButton(
-//         onPressed: () {},
-//         textColor: Theme.of(context).textTheme.bodyText1.color,
-//         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18.0)),
-//         child: Text(
-//           'Login',
-//         ),
-//        ),
-//      ],
-//    );
-//  }
-//}
