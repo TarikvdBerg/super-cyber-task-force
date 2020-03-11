@@ -15,7 +15,30 @@ class SideBar extends StatefulWidget {
 }
 
 class _SideBarState extends State<SideBar> {
-  void confirmLogOut() {}
+  void confirmLogOut(context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Are you sure?"),
+          actions: <Widget>[
+            FlatButton(
+              onPressed: () {
+                return Navigator.popUntil(context, ModalRoute.withName("login"));
+              },
+              child: const Text("Log out"),
+            ),
+            FlatButton(
+              onPressed: () {
+                return Navigator.pop(context, "password");
+              },
+              child: const Text("Cancel"),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
