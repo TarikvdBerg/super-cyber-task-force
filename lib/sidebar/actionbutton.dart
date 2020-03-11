@@ -18,7 +18,7 @@ class _ActionButtonState extends State<ActionButton> {
     return Container(
       width: MediaQuery.of(context).size.width,
       child: FlatButton(
-        onPressed: this.widget.action,
+        onPressed: () { this.widget.action(context); },
         padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
         hoverColor: Theme.of(context).primaryColor,
         child: Row(children: <Widget>[
