@@ -1,8 +1,6 @@
 
 // Exception for when a instance of an model already exists
 // on the server,.
-import 'package:flutter/animation.dart';
-
 class ModelAlreadyExistsException implements Exception {
   static String modelName;
   

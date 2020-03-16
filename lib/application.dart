@@ -1,22 +1,25 @@
-import 'package:SCTFPasswordManager/views/register.dart';
+import 'package:SCTFPasswordManager/core/tables.dart';
+import 'package:SCTFPasswordManager/groups/add_group.dart';
+import 'package:SCTFPasswordManager/groups/edit_group.dart';
+import 'package:SCTFPasswordManager/groups/remove_group.dart';
+import 'package:SCTFPasswordManager/views/debug.dart';
 import 'package:SCTFPasswordManager/views/login.dart';
 import 'package:SCTFPasswordManager/views/password_view.dart';
+import 'package:SCTFPasswordManager/views/register.dart';
 import 'package:SCTFPasswordManager/views/reset_password.dart';
-import 'package:SCTFPasswordManager/groups/add_group.dart';
-import 'package:SCTFPasswordManager/groups/remove_group.dart';
-import 'package:SCTFPasswordManager/groups/edit_group.dart';
-import 'package:SCTFPasswordManager/views/myprofile.dart';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class SCTFPasswordManager extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return Provider(
+      create: (_) => LocalPasswordDatabase(),
+      child: MaterialApp(
         title: 'SCTF Password Manager',
         theme: ThemeData(
-          brightness: Brightness.dark,
+            brightness: Brightness.dark,
             primaryColorDark: Color(0xFF131313),
             primaryColor: Color(0xFF212121),
             primaryColorLight: Color(0xFF484848),
@@ -33,9 +36,8 @@ class SCTFPasswordManager extends StatelessWidget {
               bodyText1: TextStyle(color: Color(0XFFBEBEBE)),
               bodyText2: TextStyle(color: Color(0XFFBEBEBE)),
             ),
-            cardColor: Color(0xFF212121)
-            ),
-        initialRoute: "login",
+            cardColor: Color(0xFF212121)),
+        initialRoute: "debug",
         routes: {
           "login": (context) => LoginView(),
           'register': (context) => RegisterView(),
@@ -44,9 +46,11 @@ class SCTFPasswordManager extends StatelessWidget {
           'AddGroup': (context) => AddGroup(),
           'RemoveGroup': (context) => RemoveGroup(),
           'EditGroup': (context) => EditGroup(),
-          'MyAccount': (context) => MyProfileView(),
+          'debug': (context) => DebugView(),
+          // 'MyAccount': (context) => MyProfileView(),
         },
         home: Scaffold(),
-        );
+      ),
+    );
   }
 }
