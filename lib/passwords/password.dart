@@ -22,11 +22,84 @@ class Password extends StatefulWidget {
 
 class _PasswordState extends State<Password> {
   bool _hovered = false;
+  GlobalKey _actionKey = GlobalKey();
+  OverlayEntry pwOverlay;
 
   void setHover(bool state) {
     setState(() {
       this._hovered = state;
     });
+  }
+
+  showOverlay(BuildContext context) async {
+    final RenderBox renderBoxRed = _actionKey.currentContext.findRenderObject();
+    final pos = renderBoxRed.localToGlobal(Offset.zero);
+
+    OverlayState overlayState = Overlay.of(context);
+    pwOverlay = OverlayEntry(
+        builder: (context) => Positioned(
+            left: pos.dx,
+            top: pos.dy,
+            child: MouseRegion(
+              onExit: (PointerExitEvent p) {
+                pwOverlay.remove();
+              },
+              child: Container(
+                color: Theme.of(context).primaryColor,
+                child: Column(
+                  children: <Widget>[
+                    FlatButton(
+                        padding:
+                            EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                        onPressed: () {
+                          print("Copy Password");
+                        },
+                        hoverColor: Theme.of(context).buttonColor,
+                        child: Row(children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.only(right: 15),
+                            child: Icon(Icons.content_copy,
+                                color: Theme.of(context).iconTheme.color),
+                          ),
+                          Text("Copy Password"),
+                        ])),
+                    FlatButton(
+                        padding:
+                            EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                        onPressed: () {
+                          print("Edit Password");
+                        },
+                        hoverColor: Theme.of(context).buttonColor,
+                        color: Theme.of(context).primaryColor,
+                        child: Row(children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.only(right: 15),
+                            child: Icon(Icons.edit,
+                                color: Theme.of(context).iconTheme.color),
+                          ),
+                          Text("Edit Password"),
+                        ])),
+                    FlatButton(
+                        padding:
+                            EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                        onPressed: () {
+                          print("Delete Password");
+                        },
+                        hoverColor: Theme.of(context).buttonColor,
+                        child: Row(children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.only(right: 15),
+                            child: Icon(Icons.delete,
+                                color: Theme.of(context).iconTheme.color),
+                          ),
+                          Text("Delete Password"),
+                        ])),
+                  ],
+                ),
+              ),
+            )));
+
+    overlayState.insert(pwOverlay);
   }
 
   @override
@@ -64,11 +137,13 @@ class _PasswordState extends State<Password> {
                   Align(
                       alignment: Alignment(0.97, -0.9),
                       child: IconButton(
+                          padding: EdgeInsets.all(0),
+                          key: _actionKey,
                           icon: Icon(Icons.more_vert),
                           color: Theme.of(context).iconTheme.color,
                           tooltip: "More Actions",
                           onPressed: () {
-                            print("Ïmplement me");
+                            showOverlay(context);
                           }))
                 ],
               )
