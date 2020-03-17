@@ -2,6 +2,9 @@ import 'package:moor_flutter/moor_flutter.dart';
 
 part 'tables.g.dart';
 
+// Old Database code that doesn't work on desktop, still here for 
+// future mobile implementations.
+
 class AuthTokens extends Table {
   TextColumn get id => text().named("id").customConstraint('UNIQUE')();
   TextColumn get token => text().named("token").customConstraint('UNIQUE')();

@@ -1,10 +1,8 @@
-import 'package:SCTFPasswordManager/core/tables.dart';
+import 'package:SCTFPasswordManager/core/cache.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class DebugView extends StatelessWidget {
-  const DebugView({Key key}) : super(key: key);
-
+  final Cache c = Cache();
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -13,14 +11,6 @@ class DebugView extends StatelessWidget {
           Text("Debug Page"),
           FlatButton(
             onPressed: () {
-              Provider.of<LocalPasswordDatabase>(context, listen: false).usersDao.insertUser(
-                  User(
-                      id: "null",
-                      username: "null",
-                      email: "null",
-                      firstname: "null",
-                      lastname: "null",
-                      displayname: "null"));
             },
             child: Text("Store In DB"),
             color: Theme.of(context).buttonColor,

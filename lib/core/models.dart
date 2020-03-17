@@ -1,5 +1,32 @@
 import 'dart:convert';
 
+class AuthTokenModel {
+  final String id;
+  final String authenticationToken;
+  final DateTime expiryDate;
+  final DateTime validUntil;
+
+  AuthTokenModel({this.id, this.authenticationToken, this.expiryDate, this.validUntil});
+
+  Map<String, dynamic> toMap() {
+    return {
+      "id": this.id,
+      "token": this.authenticationToken,
+      "expiry_date": this.expiryDate,
+      "valid_until": this.validUntil
+    };
+  }
+
+  factory AuthTokenModel.fromMap(Map<String, dynamic> map) {
+    return AuthTokenModel(
+      id: map["id"],
+      authenticationToken: map["token"],
+      expiryDate: map["expiry_date"],
+      validUntil: map["valid_until"]
+    );
+  }
+}
+
 class UserModel {
   final String id;
   final String userName;
@@ -7,6 +34,7 @@ class UserModel {
   final String firstName;
   final String lastName;
   final String displayName;
+  final DateTime validUntil;
 
   UserModel(
       {this.id,
@@ -14,9 +42,10 @@ class UserModel {
       this.eMail,
       this.firstName,
       this.lastName,
-      this.displayName});
+      this.displayName,
+      this.validUntil});
 
-  Map<String, String> toJSON() {
+  Map<String, dynamic> toMap() {
     return {
       "id": this.id,
       "username": this.userName,
@@ -24,17 +53,19 @@ class UserModel {
       "first_name": this.firstName,
       "last_name": this.lastName,
       "display_name": this.displayName,
+      "valid_until": this.validUntil,
     };
   }
 
-  factory UserModel.fromJSON(Map<String, dynamic> json) {
+  factory UserModel.fromMap(Map<String, dynamic> map) {
     return UserModel(
-        id: json['id'],
-        userName: json['username'],
-        eMail: json['email'],
-        firstName: json['first_name'],
-        lastName: json['last_name'],
-        displayName: json['display_name']);
+        id: map['id'],
+        userName: map['username'],
+        eMail: map['email'],
+        firstName: map['first_name'],
+        lastName: map['last_name'],
+        displayName: map['display_name'],
+        validUntil: map["'valid_until"]);
   }
 
   @override
@@ -46,20 +77,23 @@ class UserModel {
 class PasswordGroupModel {
   final String id;
   final String name;
+  final DateTime validUntil;
 
-  PasswordGroupModel({this.id, this.name});
+  PasswordGroupModel({this.id, this.name, this.validUntil});
 
-  Map<String, String> toJSON() {
+  Map<String, dynamic> toMap() {
     return {
       "id": this.id,
-      "enc_name": this.name
+      "enc_name": this.name,
+      "valid_until": this.validUntil,
     };
   }
 
-  factory PasswordGroupModel.fromJSON(Map<String, dynamic> json) {
+  factory PasswordGroupModel.fromMap(Map<String, dynamic> map) {
     return PasswordGroupModel(
-      id: json["id"],
-      name: json["enc_name"]
+      id: map["id"],
+      name: map["enc_name"],
+      validUntil: map["valid_until"]
     );
   }
 
@@ -72,7 +106,7 @@ class PasswordGroupModel {
 List<PasswordGroupModel> parsePasswordGroups(String body) {
   final parsed = json.decode(body).cast<Map<String, dynamic>>();
   return parsed
-      .map<PasswordGroupModel>((json) => PasswordGroupModel.fromJSON(json))
+      .map<PasswordGroupModel>((json) => PasswordGroupModel.fromMap(json))
       .toList();
 }
 
@@ -82,31 +116,34 @@ class PasswordModel {
   final String encDescription;
   final String encPassword;
   final String group;
+  final DateTime validUntil;
 
   PasswordModel(
       {this.id,
       this.encName,
       this.encDescription,
       this.encPassword,
-      this.group});
+      this.group,
+      this.validUntil});
 
-  Map<String, String> toJSON() {
+  Map<String, dynamic> toMap() {
     return {
       "id": this.id,
       "enc_name": this.encName,
       "enc_description": this.encDescription,
       "enc_password": this.encPassword,
-      "parent_group": this.group
+      "parent_group": this.group,
+      "valid_unitl": this.validUntil,
     };
   }
 
-  factory PasswordModel.fromJSON(Map<String, dynamic> json) {
+  factory PasswordModel.fromMap(Map<String, dynamic> map) {
     return PasswordModel(
-      id: json["id"],
-      encName: json["enc_name"],
-      encDescription: json["enc_description"],
-      encPassword: json["enc_password"],
-      group: json["parent_group"],
+      id: map["id"],
+      encName: map["enc_name"],
+      encDescription: map["enc_description"],
+      encPassword: map["enc_password"],
+      group: map["parent_group"],
     );
   }
 
@@ -119,6 +156,6 @@ class PasswordModel {
 List<PasswordModel> parsePasswords(String body) {
   final parsed = json.decode(body).cast<Map<String, dynamic>>();
   return parsed
-      .map<PasswordModel>((json) => PasswordModel.fromJSON(json))
+      .map<PasswordModel>((json) => PasswordModel.fromMap(json))
       .toList();
 }
