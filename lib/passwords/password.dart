@@ -31,6 +31,33 @@ class _PasswordState extends State<Password> {
     });
   }
 
+  void showPasswordDeleteDialog({String name, BuildContext context}) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Remove password"),
+          content: const Text("Are you sure you want to remove this password?"),
+          actions: <Widget>[
+            FlatButton(
+              child: const Text("Remove"),
+              onPressed: () {
+                // TODO: implement password remove functionality
+              },
+            ),
+            FlatButton(
+              child: const Text("Cancel"),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   showOverlay(BuildContext context) async {
     final RenderBox renderBoxRed = _actionKey.currentContext.findRenderObject();
     final pos = renderBoxRed.localToGlobal(Offset.zero);
@@ -83,7 +110,7 @@ class _PasswordState extends State<Password> {
                         padding:
                             EdgeInsets.symmetric(vertical: 10, horizontal: 15),
                         onPressed: () {
-                          print("Delete Password");
+                          showPasswordDeleteDialog(name: "", context: context);
                         },
                         hoverColor: Theme.of(context).buttonColor,
                         child: Row(children: <Widget>[
