@@ -5,7 +5,7 @@ import 'package:SCTFPasswordManager/views/reset_password.dart';
 import 'package:SCTFPasswordManager/groups/add_group.dart';
 import 'package:SCTFPasswordManager/groups/remove_group.dart';
 import 'package:SCTFPasswordManager/groups/edit_group.dart';
-import 'package:SCTFPasswordManager/views/myprofile.dart';
+// import 'package:SCTFPasswordManager/views/myprofile.dart';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -44,7 +44,7 @@ class SCTFPasswordManager extends StatelessWidget {
           'AddGroup': (context) => AddGroup(),
           'RemoveGroup': (context) => RemoveGroup(),
           'EditGroup': (context) => EditGroup(),
-          'MyAccount': (context) => MyProfileView(),
+          // 'MyAccount': (context) => MyProfileView(),
         },
         home: Scaffold(),
         );
