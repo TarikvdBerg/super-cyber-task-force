@@ -94,7 +94,7 @@ class LoginFormState extends State<LoginForm> {
                     Navigator.pushNamed(context, "register");
                   },
                   child: Text(
-                    'create account',
+                    'Create account',
                     style: TextStyle(
                         color: Theme.of(context).textTheme.bodyText1.color,
                         decoration: TextDecoration.underline),

@@ -1,9 +1,8 @@
+import 'package:SCTFPasswordManager/sidebar/actionbutton.dart';
+import 'package:SCTFPasswordManager/sidebar/navigationbutton.dart';
+import 'package:SCTFPasswordManager/sidebar/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-
-import 'package:SCTFPasswordManager/sidebar/profile.dart';
-import 'package:SCTFPasswordManager/sidebar/navigationbutton.dart';
-import 'package:SCTFPasswordManager/sidebar/actionbutton.dart';
 
 class SideBar extends StatefulWidget {
   final String userName;
@@ -58,7 +57,7 @@ class _SideBarState extends State<SideBar> {
             child: Column(children: <Widget>[
               NavigationButton(title: "My Passwords", iconData: Icons.security),
               NavigationButton(title: "Add Password", iconData: Icons.add),
-              NavigationButton(title: "My Profile", iconData: Icons.face),
+              NavigationButton(title: "My Profile", iconData: Icons.face, targetURI: 'MyAccount',),
               //NavigationButton(title: "Add group", iconData: Icons.group_add , targetURI: "AddGroup",),
               //NavigationButton(title: "Remove group", iconData: Icons.remove_circle , targetURI: "RemoveGroup",),
               //NavigationButton(title: "Edit group", iconData: Icons.edit , targetURI: "EditGroup",),
