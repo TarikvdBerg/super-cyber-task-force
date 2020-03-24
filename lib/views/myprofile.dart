@@ -1,7 +1,7 @@
 import 'package:SCTFPasswordManager/sidebar/sidebar.dart';
 import 'package:flutter/material.dart';
 
-final double size_between_entries = 15;
+final double sizeBetweenEntries = 15;
 
 class MyProfileView extends StatelessWidget {
   @override
@@ -41,21 +41,21 @@ class MyProfileView extends StatelessWidget {
                         style: TextStyle(fontSize: 20),
                       ),
                       SizedBox(
-                        height: size_between_entries,
+                        height: sizeBetweenEntries,
                       ),
                       Text(
                         'Last name',
                         style: TextStyle(fontSize: 20),
                       ),
                       SizedBox(
-                        height: size_between_entries,
+                        height: sizeBetweenEntries,
                       ),
                       Text(
                         'Email',
                         style: TextStyle(fontSize: 20),
                       ),
                       SizedBox(
-                        height: size_between_entries,
+                        height: sizeBetweenEntries,
                       ),
                       Text(
                         'Password',
@@ -74,7 +74,7 @@ class MyProfileView extends StatelessWidget {
                               fontSize: 20,
                               decoration: TextDecoration.underline)),
                       SizedBox(
-                        height: size_between_entries,
+                        height: sizeBetweenEntries,
                       ),
                       Text(
                         'Marion',
@@ -82,7 +82,7 @@ class MyProfileView extends StatelessWidget {
                             fontSize: 20, decoration: TextDecoration.underline),
                       ),
                       SizedBox(
-                        height: size_between_entries,
+                        height: sizeBetweenEntries,
                       ),
                       Text(
                         'gayguy18@bigchungus.com',
@@ -90,7 +90,7 @@ class MyProfileView extends StatelessWidget {
                             fontSize: 20, decoration: TextDecoration.underline),
                       ),
                       SizedBox(
-                        height: size_between_entries,
+                        height: sizeBetweenEntries,
                       ),
                       Text(
                         '***********',
