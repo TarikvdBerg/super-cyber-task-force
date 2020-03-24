@@ -19,6 +19,8 @@ dependencies:
   moor_flutter: ^2.1.1
   path_provider: ^1.6.5
   sembast:  ^2.3.0
+  provider: ^4.0.4
+  encrypt: ^4.0.0
   
 dev_dependencies:
   flutter_test:
