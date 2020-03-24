@@ -33,7 +33,7 @@ class SCTFPasswordManager extends StatelessWidget {
             bodyText2: TextStyle(color: Color(0XFFBEBEBE)),
           ),
           cardColor: Color(0xFF212121)),
-      initialRoute: "debug",
+      initialRoute: "login",
       routes: {
         "login": (context) => LoginView(),
         'register': (context) => RegisterView(),
