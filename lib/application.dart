@@ -19,8 +19,8 @@ class SCTFPasswordManager extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: <Provider>[
-        Provider(create: (_) => API()),
-        Provider(create: (_) => EncryptionManager()),
+        Provider<API>(create: (_) => API()),
+        Provider<EncryptionManager>(create: (_) => EncryptionManager()),
       ],
       child: MaterialApp(
         title: 'SCTF Password Manager',
