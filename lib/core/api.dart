@@ -41,16 +41,17 @@ class API {
         throw BadRequestException(resp.body);
         break;
 
+      // Handle unauthenticated requests
       case 401:
         throw RequestNotAuthenticatedException(resp.request.url.toString());
         break;
 
-      // Handle unauthenticated requests
+      // Handle forbidden requests
       case 403:
         throw RequestForbiddenException(resp.request.url.toString());
         break;
       
-      // Handle not found request
+      // Handle not found request 
       case 404:
         throw ModelDoesNotExistException("");
 
@@ -63,9 +64,9 @@ class API {
   // authenticate sends an authentication request to the backend. It takes in an username and password
   // and sets the local authToken variable to the retrieved token if the request was succesfull.
   // It throws an Exception is anything went wrong during the authentication process.
-  Future<bool> authenticate(String username, String password) async {
+  Future<AuthTokenModel> authenticate(String username, String password) async {
     if (authToken != null) {
-      return true;
+      return null;
     }
 
     Map<String, String> payload = {"username": username, "password": password};
@@ -75,16 +76,17 @@ class API {
     verifyCommonResponses(resp);
     
     if (resp.statusCode == 200) {
-      dynamic tokenData = json.decode(resp.body);
-      this.authToken = tokenData["token"];
-      return true;
+      Map<String, dynamic> tokenData = json.decode(resp.body);
+      AuthTokenModel authToken = AuthTokenModel.fromMap(tokenData);
+      this.authToken = authToken.authenticationToken;
+      return authToken;
     } else {
       throw UnknownResponseException(resp.statusCode, resp.body);
     }
   }
 
   // Deletes the local authentication token
-  deAuthenticate() {
+  void deAuthenticate() {
     this.authToken = null;
   }
 
@@ -96,7 +98,7 @@ class API {
     verifyCommonResponses(resp);
 
     if (resp.statusCode == 200) {
-      return UserModel.fromJSON(json.decode(resp.body));
+      return UserModel.fromMap(json.decode(resp.body));
     } else {
       throw UnknownResponseException(resp.statusCode, resp.body);
     }
@@ -108,13 +110,13 @@ class API {
   // unsuccesfull the function throws an Exception to notify the caller.
   Future<UserModel> createUser(UserModel user, String password) async {
     // Build payload
-    Map<String, String> payload = user.toJSON();
+    Map<String, String> payload = user.toMap();
     payload.addAll({"password": password});
 
     final resp = await http.post(userURL, body: json.encode(payload), headers: getHeaders());
 
     if (resp.statusCode == 201) {
-      return UserModel.fromJSON(json.decode(resp.body));
+      return UserModel.fromMap(json.decode(resp.body));
     } else {
       if (resp.statusCode == 400 && resp.body.contains("username already exists")) {
         throw ModelAlreadyExistsException("User");
@@ -129,12 +131,12 @@ class API {
   // failure of the action.
   Future<UserModel> updateUser(UserModel user) async {
     String uid = user.id;
-    final resp = await http.put(userURL+"$uid/", body: json.encode(user.toJSON()), headers: getHeaders());
+    final resp = await http.put(userURL+"$uid/", body: json.encode(user.toMap()), headers: getHeaders());
     
     verifyCommonResponses(resp);
 
     if (resp.statusCode == 200) {
-      return UserModel.fromJSON(json.decode(resp.body));
+      return UserModel.fromMap(json.decode(resp.body));
     } else {
       throw UnknownResponseException(resp.statusCode, resp.body);
     }
@@ -178,7 +180,7 @@ class API {
     verifyCommonResponses(resp);
 
     if (resp.statusCode == 200) {
-      return PasswordGroupModel.fromJSON(json.decode(resp.body));
+      return PasswordGroupModel.fromMap(json.decode(resp.body));
     } else {
       throw UnknownResponseException(resp.statusCode, resp.body);
     }
@@ -187,11 +189,11 @@ class API {
   // Creates a new password group based on the provided PasswordGrouppModel. Returns the
   // created group if successfull otherwise throws an exception based on what went wrong.
   Future<PasswordGroupModel> createGroup(PasswordGroupModel group) async {
-    final resp = await http.post(passwordGroupURL, body: json.encode(group.toJSON()), headers: getHeaders());
+    final resp = await http.post(passwordGroupURL, body: json.encode(group.toMap()), headers: getHeaders());
     verifyCommonResponses(resp);
 
     if (resp.statusCode == 200) {
-      return PasswordGroupModel.fromJSON(json.decode(resp.body));
+      return PasswordGroupModel.fromMap(json.decode(resp.body));
     } else {
       throw UnknownResponseException(resp.statusCode, resp.body);
     }
@@ -201,12 +203,12 @@ class API {
   // PasswordGroup if succesful otherwise throws an exception based on what went wrong.
   Future<PasswordGroupModel> updateGroup(PasswordGroupModel group) async {
     String pgid = group.id;
-    final resp = await http.put(passwordGroupURL+"$pgid/", body: json.encode(group.toJSON()), headers: getHeaders());
+    final resp = await http.put(passwordGroupURL+"$pgid/", body: json.encode(group.toMap()), headers: getHeaders());
     
     verifyCommonResponses(resp);
 
     if (resp.statusCode == 200) {
-      return PasswordGroupModel.fromJSON(json.decode(resp.body));
+      return PasswordGroupModel.fromMap(json.decode(resp.body));
     } else {
       throw UnknownResponseException(resp.statusCode, resp.body);
     }
@@ -252,7 +254,7 @@ class API {
     verifyCommonResponses(resp);
 
     if (resp.statusCode == 200) {
-      return PasswordModel.fromJSON(json.decode(resp.body));
+      return PasswordModel.fromMap(json.decode(resp.body));
     } else {
       throw UnknownResponseException(resp.statusCode, resp.body);
     }
@@ -262,12 +264,12 @@ class API {
   // the newly generated PasswordModel if succesful, throws exceptions based on 
   // what went wrong.
   Future<PasswordModel> createPassword(PasswordModel password) async {
-    final resp = await http.post(passwordURL, body: json.encode(password.toJSON()), headers: getHeaders());
+    final resp = await http.post(passwordURL, body: json.encode(password.toMap()), headers: getHeaders());
     
     verifyCommonResponses(resp);
 
     if (resp.statusCode == 200) {
-      return PasswordModel.fromJSON(json.decode(resp.body));
+      return PasswordModel.fromMap(json.decode(resp.body));
     } else {
       throw UnknownResponseException(resp.statusCode, resp.body);
     }
@@ -277,7 +279,7 @@ class API {
   // PasswordModel if succesful otherwise throws an exception based on what went wrong.
   Future<PasswordModel> updatePassword(PasswordModel password) async {
     String pid = password.id;
-    final resp = await http.put(passwordURL+"$pid/", body: json.encode(password.toJSON()), headers: getHeaders());
+    final resp = await http.put(passwordURL+"$pid/", body: json.encode(password.toMap()), headers: getHeaders());
 
     try {
       verifyCommonResponses(resp);
@@ -286,7 +288,7 @@ class API {
     }
     print(resp.statusCode);
     if (resp.statusCode == 200) {
-      return PasswordModel.fromJSON(json.decode(resp.body));
+      return PasswordModel.fromMap(json.decode(resp.body));
     } else {  
       throw UnknownResponseException(resp.statusCode, resp.body);
     }

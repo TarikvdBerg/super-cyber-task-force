@@ -74,6 +74,7 @@ class _PasswordState extends State<Password> {
               child: Container(
                 color: Theme.of(context).primaryColor,
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     FlatButton(
                         padding:

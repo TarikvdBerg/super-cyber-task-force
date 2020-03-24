@@ -1,10 +1,11 @@
-import 'package:SCTFPasswordManager/views/register.dart';
+import 'package:SCTFPasswordManager/groups/add_group.dart';
+import 'package:SCTFPasswordManager/groups/edit_group.dart';
+import 'package:SCTFPasswordManager/groups/remove_group.dart';
+import 'package:SCTFPasswordManager/views/debug.dart';
 import 'package:SCTFPasswordManager/views/login.dart';
 import 'package:SCTFPasswordManager/views/password_view.dart';
+import 'package:SCTFPasswordManager/views/register.dart';
 import 'package:SCTFPasswordManager/views/reset_password.dart';
-import 'package:SCTFPasswordManager/groups/add_group.dart';
-import 'package:SCTFPasswordManager/groups/remove_group.dart';
-import 'package:SCTFPasswordManager/groups/edit_group.dart';
 import 'package:SCTFPasswordManager/views/myprofile.dart';
 import 'package:SCTFPasswordManager/views/editprofile.dart';
 
@@ -16,8 +17,8 @@ class SCTFPasswordManager extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        title: 'SCTF Password Manager',
-        theme: ThemeData(
+      title: 'SCTF Password Manager',
+      theme: ThemeData(
           brightness: Brightness.dark,
             primaryColorDark: Color(0xFF131313),
             primaryColor: Color(0xFF212121),
