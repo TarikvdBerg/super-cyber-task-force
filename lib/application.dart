@@ -1,4 +1,4 @@
-import 'package:SCTFPasswordManager/core/cache.dart';
+import 'package:SCTFPasswordManager/core/api.dart';
 import 'package:SCTFPasswordManager/core/encryption.dart';
 import 'package:SCTFPasswordManager/groups/add_group.dart';
 import 'package:SCTFPasswordManager/groups/edit_group.dart';
@@ -19,7 +19,7 @@ class SCTFPasswordManager extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: <Provider>[
-        Provider(create: (_) => Cache()),
+        Provider(create: (_) => API()),
         Provider(create: (_) => EncryptionManager()),
       ],
       child: MaterialApp(
