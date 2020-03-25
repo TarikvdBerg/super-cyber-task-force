@@ -24,7 +24,37 @@ class _SideBarState extends State<SideBar> {
           actions: <Widget>[
             FlatButton(
               onPressed: () {
-                return Navigator.popUntil(context, ModalRoute.withName("login"));
+                return Navigator.popUntil(
+                  context,
+                  ModalRoute.withName("login"),
+                );
+              },
+              child: const Text("Log out"),
+            ),
+            FlatButton(
+              onPressed: () {
+                return Navigator.pop(context, "password");
+              },
+              child: const Text("Cancel"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void confirmLogOutAllDevices(context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Log out everywhere"),
+          content: const Text(
+              "Are you sure you want to log out on all devices you're currently logged into?"),
+          actions: <Widget>[
+            FlatButton(
+              onPressed: () {
+                print("TODO: Implement logOutEverywhere functionality");
               },
               child: const Text("Log out"),
             ),
@@ -63,6 +93,11 @@ class _SideBarState extends State<SideBar> {
               //NavigationButton(title: "Remove group", iconData: Icons.remove_circle , targetURI: "RemoveGroup",),
               //NavigationButton(title: "Edit group", iconData: Icons.edit , targetURI: "EditGroup",),
               Spacer(),
+              ActionButton(
+                title: "Log Out Everywhere",
+                iconData: Icons.exit_to_app,
+                action: confirmLogOutAllDevices,
+              ),
               ActionButton(
                 title: "Log Out",
                 iconData: Icons.exit_to_app,
