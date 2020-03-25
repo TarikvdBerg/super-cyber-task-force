@@ -66,7 +66,6 @@ class _SideBarState extends State<SideBar> {
               ActionButton(
                 title: "Log Out",
                 iconData: Icons.exit_to_app,
-                iconColor: Theme.of(context).iconTheme.color,
                 action: confirmLogOut,
               ),
             ]),
