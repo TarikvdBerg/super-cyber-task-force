@@ -105,12 +105,12 @@ class API {
   }
 
 
-  // Asks the server to create a new user in the databse, a filled in UserModel is required
+  // Asks the server to create a new user in the database, a filled in UserModel is required
   // along with the target password of the user to be made. If creation of the user is
   // unsuccesfull the function throws an Exception to notify the caller.
   Future<UserModel> createUser(UserModel user, String password) async {
     // Build payload
-    Map<String, String> payload = user.toMap();
+    Map<String, dynamic> payload = user.toMap();
     payload.addAll({"password": password});
 
     final resp = await http.post(userURL, body: json.encode(payload), headers: getHeaders());
