@@ -1,20 +1,16 @@
+import 'package:SCTFPasswordManager/core/api.dart';
+import 'package:SCTFPasswordManager/core/models.dart';
+import 'package:SCTFPasswordManager/passwords/edit_password.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class Password extends StatefulWidget {
-  final String encPassword;
-  final String name;
-  final String userName;
-  final String description;
-  final String imgURL;
+  final PasswordModel model;
 
   Password({
     Key key,
-    this.encPassword,
-    this.name,
-    this.userName,
-    this.description,
-    this.imgURL,
+    this.model
   }) : super(key: key);
 
   _PasswordState createState() => _PasswordState();
@@ -31,19 +27,24 @@ class _PasswordState extends State<Password> {
     });
   }
 
-  void showPasswordDeleteDialog({String name, BuildContext context}) {
+  void showPasswordDeleteDialog(BuildContext context, PasswordModel password) {
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text("Remove password"),
+          title: const Text("Delete password"),
           content: const Text("Are you sure you want to remove this password?"),
           actions: <Widget>[
             FlatButton(
-              child: const Text("Remove"),
-              onPressed: () {
-                // TODO: implement password remove functionality
+              child: const Text("Delete"),
+              onPressed: () async {
+                API api = Provider.of<API>(context, listen: false);
+                bool res = await api.deletePassword(password);
+                if (res) {
+                  Navigator.pop(context);
+                  return null;
+                }
               },
             ),
             FlatButton(
@@ -58,7 +59,17 @@ class _PasswordState extends State<Password> {
     );
   }
 
-  showOverlay(BuildContext context) async {
+  void showPasswordEditDialog(BuildContext context, PasswordModel password) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return EditSinglePassword(password: password);
+      },
+    );
+  }
+
+  showOverlay(BuildContext context, PasswordModel password) async {
     final RenderBox renderBoxRed = _actionKey.currentContext.findRenderObject();
     final pos = renderBoxRed.localToGlobal(Offset.zero);
 
@@ -80,7 +91,8 @@ class _PasswordState extends State<Password> {
                         padding:
                             EdgeInsets.symmetric(vertical: 10, horizontal: 15),
                         onPressed: () {
-                          print("Copy Password");
+                          // Copies the de-encrypted password to the clipboard.
+                          pwOverlay.remove();
                         },
                         hoverColor: Theme.of(context).buttonColor,
                         child: Row(children: <Widget>[
@@ -95,7 +107,8 @@ class _PasswordState extends State<Password> {
                         padding:
                             EdgeInsets.symmetric(vertical: 10, horizontal: 15),
                         onPressed: () {
-                          print("Edit Password");
+                          pwOverlay.remove();
+                          showPasswordEditDialog(context, password);
                         },
                         hoverColor: Theme.of(context).buttonColor,
                         color: Theme.of(context).primaryColor,
@@ -111,7 +124,8 @@ class _PasswordState extends State<Password> {
                         padding:
                             EdgeInsets.symmetric(vertical: 10, horizontal: 15),
                         onPressed: () {
-                          showPasswordDeleteDialog(name: "", context: context);
+                          pwOverlay.remove();
+                          showPasswordDeleteDialog(context, this.widget.model);
                         },
                         hoverColor: Theme.of(context).buttonColor,
                         child: Row(children: <Widget>[
@@ -152,12 +166,12 @@ class _PasswordState extends State<Password> {
             children: <Widget>[
               Column(
                 children: <Widget>[
-                  Image.network(this.widget.imgURL, height: 100),
+                  Image.network(this.widget.model.imgURL, height: 100),
                   Text(
-                    this.widget.name,
+                    this.widget.model.encName,
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  Text(this.widget.userName),
+                  Text(this.widget.model.encUsername),
                 ],
               ),
               Column(
@@ -171,7 +185,7 @@ class _PasswordState extends State<Password> {
                           color: Theme.of(context).iconTheme.color,
                           tooltip: "More Actions",
                           onPressed: () {
-                            showOverlay(context);
+                            showOverlay(context, this.widget.model);
                           }))
                 ],
               )

@@ -3,6 +3,7 @@ import 'package:SCTFPasswordManager/core/encryption.dart';
 import 'package:SCTFPasswordManager/groups/add_group.dart';
 import 'package:SCTFPasswordManager/groups/edit_group.dart';
 import 'package:SCTFPasswordManager/groups/remove_group.dart';
+import 'package:SCTFPasswordManager/views/debug.dart';
 import 'package:SCTFPasswordManager/views/login.dart';
 import 'package:SCTFPasswordManager/views/password_view.dart';
 import 'package:SCTFPasswordManager/views/register.dart';
@@ -43,7 +44,7 @@ class SCTFPasswordManager extends StatelessWidget {
               bodyText2: TextStyle(color: Color(0XFFBEBEBE)),
             ),
             cardColor: Color(0xFF212121)),
-        initialRoute: "login",
+        initialRoute: "debug",
         routes: {
           "login": (context) => LoginView(),
           'register': (context) => RegisterView(),
@@ -54,6 +55,7 @@ class SCTFPasswordManager extends StatelessWidget {
           'EditGroup': (context) => EditGroup(),
           'MyAccount': (context) => MyProfileView(),
           'editProfile': (context) => EditProfileView(),
+          'debug': (context) => DebugView(),
         },
         home: Scaffold(),
       ),

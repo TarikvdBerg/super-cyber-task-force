@@ -20,75 +20,11 @@ class PasswordView extends StatelessWidget {
                     PasswordGroup(
                       groupName: "Cool Password Group",
                       passwordList: <Password>[
-                        Password(
-                          userName: "User1",
-                          encPassword: "TSE",
-                          description: "Test",
-                          imgURL:
-                              "https://cdn1.iconfinder.com/data/icons/logotypes/32/youtube-512.png",
-                          name: "Youtube",
-                        ),
-                        Password(
-                          userName: "User1",
-                          encPassword: "TSE",
-                          description: "Test",
-                          imgURL:
-                              "https://cdn1.iconfinder.com/data/icons/logotypes/32/youtube-512.png",
-                          name: "Youtube",
-                        ),
-                        Password(
-                          userName: "User1",
-                          encPassword: "TSE",
-                          description: "Test",
-                          imgURL:
-                              "https://cdn1.iconfinder.com/data/icons/logotypes/32/youtube-512.png",
-                          name: "Youtube",
-                        ),
-                        Password(
-                          userName: "User1",
-                          encPassword: "TSE",
-                          description: "Test",
-                          imgURL:
-                              "https://cdn1.iconfinder.com/data/icons/logotypes/32/youtube-512.png",
-                          name: "Youtube",
-                        ),
-                        Password(
-                          userName: "User1",
-                          encPassword: "TSE",
-                          description: "Test",
-                          imgURL:
-                              "https://cdn1.iconfinder.com/data/icons/logotypes/32/youtube-512.png",
-                          name: "Youtube",
-                        ),
-                        Password(
-                          userName: "User1",
-                          encPassword: "TSE",
-                          description: "Test",
-                          imgURL:
-                              "https://cdn1.iconfinder.com/data/icons/logotypes/32/youtube-512.png",
-                          name: "Youtube",
-                        ),
-                        Password(
-                          userName: "User1",
-                          encPassword: "TSE",
-                          description: "Test",
-                          imgURL:
-                              "https://cdn1.iconfinder.com/data/icons/logotypes/32/youtube-512.png",
-                          name: "Youtube",
-                        ),
                       ],
                     ),
                     PasswordGroup(
                       groupName: "Cool Password Group",
                       passwordList: <Password>[
-                        Password(
-                          userName: "User1",
-                          encPassword: "TSE",
-                          description: "Test",
-                          imgURL:
-                              "https://cdn1.iconfinder.com/data/icons/logotypes/32/youtube-512.png",
-                          name: "Youtube",
-                        ),
                       ],
                     ),
                   ]),
