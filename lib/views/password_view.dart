@@ -1,11 +1,16 @@
 import 'package:SCTFPasswordManager/passwords/group.dart';
 import 'package:SCTFPasswordManager/passwords/password.dart';
 import 'package:SCTFPasswordManager/sidebar/sidebar.dart';
+import 'package:SCTFPasswordManager/core/models.dart';
+import 'package:SCTFPasswordManager/core/api.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 
 class PasswordView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    API api = Provider.of<API>(context);
+    api.authenticate("NielsVM", "Develop1");
     return Scaffold(
         body: Container(
             color: Theme.of(context).primaryColor,
@@ -17,83 +22,22 @@ class PasswordView extends StatelessWidget {
                   height: MediaQuery.of(context).size.height,
                   alignment: Alignment.topCenter,
                   child: ListView(children: <Widget>[
-                    PasswordGroup(
-                      groupName: "Cool Password Group",
-                      passwordList: <Password>[
-                        Password(
-                          userName: "User1",
-                          encPassword: "TSE",
-                          description: "Test",
-                          imgURL:
-                              "https://cdn1.iconfinder.com/data/icons/logotypes/32/youtube-512.png",
-                          name: "Youtube",
-                        ),
-                        Password(
-                          userName: "User1",
-                          encPassword: "TSE",
-                          description: "Test",
-                          imgURL:
-                              "https://cdn1.iconfinder.com/data/icons/logotypes/32/youtube-512.png",
-                          name: "Youtube",
-                        ),
-                        Password(
-                          userName: "User1",
-                          encPassword: "TSE",
-                          description: "Test",
-                          imgURL:
-                              "https://cdn1.iconfinder.com/data/icons/logotypes/32/youtube-512.png",
-                          name: "Youtube",
-                        ),
-                        Password(
-                          userName: "User1",
-                          encPassword: "TSE",
-                          description: "Test",
-                          imgURL:
-                              "https://cdn1.iconfinder.com/data/icons/logotypes/32/youtube-512.png",
-                          name: "Youtube",
-                        ),
-                        Password(
-                          userName: "User1",
-                          encPassword: "TSE",
-                          description: "Test",
-                          imgURL:
-                              "https://cdn1.iconfinder.com/data/icons/logotypes/32/youtube-512.png",
-                          name: "Youtube",
-                        ),
-                        Password(
-                          userName: "User1",
-                          encPassword: "TSE",
-                          description: "Test",
-                          imgURL:
-                              "https://cdn1.iconfinder.com/data/icons/logotypes/32/youtube-512.png",
-                          name: "Youtube",
-                        ),
-                        Password(
-                          userName: "User1",
-                          encPassword: "TSE",
-                          description: "Test",
-                          imgURL:
-                              "https://cdn1.iconfinder.com/data/icons/logotypes/32/youtube-512.png",
-                          name: "Youtube",
-                        ),
-                      ],
-                    ),
-                    PasswordGroup(
-                      groupName: "Cool Password Group",
-                      passwordList: <Password>[
-                        Password(
-                          userName: "User1",
-                          encPassword: "TSE",
-                          description: "Test",
-                          imgURL:
-                              "https://cdn1.iconfinder.com/data/icons/logotypes/32/youtube-512.png",
-                          name: "Youtube",
-                        ),
-                      ],
+                    FutureBuilder<List<PasswordGroupModel>>(
+                      future: api.fetchAllGroups(),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          return PasswordGroup();
+                        } else if (snapshot.hasError) {
+                          return Text("${snapshot.error}");
+                        }
+                        return CircularProgressIndicator();
+                      },
                     ),
                   ]),
                 )
               ],
-            )));
+            )
+          )
+        );
   }
 }
