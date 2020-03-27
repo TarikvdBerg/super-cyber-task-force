@@ -1,5 +1,4 @@
 import 'package:SCTFPasswordManager/passwords/group.dart';
-import 'package:SCTFPasswordManager/passwords/password.dart';
 import 'package:SCTFPasswordManager/sidebar/sidebar.dart';
 import 'package:SCTFPasswordManager/core/api.dart';
 import 'package:provider/provider.dart';
@@ -21,21 +20,20 @@ class PasswordView extends StatelessWidget {
                   height: MediaQuery.of(context).size.height,
                   alignment: Alignment.topCenter,
                   child: ListView(children: <Widget>[
-                    PasswordGroup(
-                      groupName: "Cool Password Group",
-                      passwordList: <Password>[
-                      ],
-                    ),
-                    PasswordGroup(
-                      groupName: "Cool Password Group",
-                      passwordList: <Password>[
-                      ],
+                    FutureBuilder<List<PasswordGroupModel>>(
+                      future: api.fetchAllGroups(),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          return PasswordGroup();
+                        } else if (snapshot.hasError) {
+                          return Text("${snapshot.error}");
+                        }
+                        return CircularProgressIndicator();
+                      },
                     ),
                   ]),
                 )
               ],
-            )
-          )
-        );
+            )));
   }
 }
