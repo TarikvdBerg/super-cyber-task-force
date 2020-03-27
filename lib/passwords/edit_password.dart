@@ -14,7 +14,7 @@ class EditSinglePassword extends StatefulWidget {
 }
 
 class _EditSinglePasswordState extends State<EditSinglePassword> {
-  final _editPasswordFormKey = GlobalKey<FormState>();
+  GlobalKey _editPasswordFormKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +26,7 @@ class _EditSinglePasswordState extends State<EditSinglePassword> {
         child: ListView(
           children: <Widget>[
             PasswordForm(
-                formKey: _editPasswordFormKey, password: this.widget.password),
+                formKey: _editPasswordFormKey, password: this.widget.password, state: "update"),
           ],
         ),
       ),

@@ -183,8 +183,7 @@ class RegisterFormState extends State<RegisterForm> {
                           eMail: _emailController.text, firstName: _firstnameController.text,
                           lastName: _lastnameController.text
                         );
-                        api.createUser(u, _passwordController.text).then((value) => {print(value)});
-
+                        api.createUser(u, _passwordController.text).then((value) => {});
                       }
                       // Navigator.pushNamed(context, "login");
                     },

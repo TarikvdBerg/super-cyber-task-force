@@ -236,8 +236,6 @@ class API {
 
     verifyCommonResponses(resp);
 
-    print(resp.statusCode);
-
     if (resp.statusCode == 200) {
       return parsePasswords(resp.body);
     } else {
@@ -281,12 +279,8 @@ class API {
     String pid = password.id;
     final resp = await http.put(passwordURL+"$pid/", body: json.encode(password.toMap()), headers: getHeaders());
 
-    try {
-      verifyCommonResponses(resp);
-    } catch (e) {
-      print(e.errorMessage());
-    }
-    print(resp.statusCode);
+    verifyCommonResponses(resp);
+    
     if (resp.statusCode == 200) {
       return PasswordModel.fromMap(json.decode(resp.body));
     } else {  

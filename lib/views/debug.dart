@@ -15,13 +15,9 @@ class DebugView extends StatelessWidget {
           FutureBuilder(
           future: api.fetchAllPasswords(),
           builder: (BuildContext context, AsyncSnapshot<List<PasswordModel>> snapshot) {
-            print(snapshot.error);
             if (!snapshot.hasData) {
-              print("No Data");
               return CircularProgressIndicator();
             }
-
-            print("Data!");
 
             List<Widget> wList = [];
             snapshot.data.forEach((e) => {

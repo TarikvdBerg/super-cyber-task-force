@@ -1,3 +1,4 @@
+import 'package:SCTFPasswordManager/passwords/add_password.dart';
 import 'package:SCTFPasswordManager/sidebar/actionbutton.dart';
 import 'package:SCTFPasswordManager/sidebar/navigationbutton.dart';
 import 'package:SCTFPasswordManager/sidebar/profile.dart';
@@ -23,7 +24,8 @@ class _SideBarState extends State<SideBar> {
           actions: <Widget>[
             FlatButton(
               onPressed: () {
-                return Navigator.popUntil(context, ModalRoute.withName("login"));
+                return Navigator.popUntil(
+                    context, ModalRoute.withName("login"));
               },
               child: const Text("Log out"),
             ),
@@ -55,10 +57,29 @@ class _SideBarState extends State<SideBar> {
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height - 99,
             child: Column(children: <Widget>[
-              NavigationButton(title: "My Passwords", iconData: Icons.security),
-              NavigationButton(title: "Add Password", iconData: Icons.add),
-              NavigationButton(title: "My Profile", iconData: Icons.face, targetURI: 'MyAccount',),
-              //NavigationButton(title: "Add group", iconData: Icons.group_add , targetURI: "AddGroup",),
+              NavigationButton(
+                  title: "My Passwords",
+                  iconData: Icons.security,
+                  pressedAction: () {
+                    Navigator.pushNamed(context, "dashboard");
+                  }),
+
+              NavigationButton(
+                title: "Add Password",
+                iconData: Icons.add,
+                pressedAction: () {
+                  showDialog(
+                      context: context, builder: (BuildContext context) {
+                        return AddSinglePassword();
+                      });
+                },
+              ),
+              NavigationButton(
+                  title: "My Profile",
+                  iconData: Icons.face,
+                  pressedAction: () {
+                    Navigator.pushNamed(context, "MyProfile");
+                  }), //NavigationButton(title: "Add group", iconData: Icons.group_add , targetURI: "AddGroup",),
               //NavigationButton(title: "Remove group", iconData: Icons.remove_circle , targetURI: "RemoveGroup",),
               //NavigationButton(title: "Edit group", iconData: Icons.edit , targetURI: "EditGroup",),
               Spacer(),

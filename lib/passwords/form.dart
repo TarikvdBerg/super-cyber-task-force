@@ -6,8 +6,9 @@ import 'package:provider/provider.dart';
 class PasswordForm extends StatefulWidget {
   final GlobalKey<FormState> formKey;
   final PasswordModel password;
+  final String state;
 
-  const PasswordForm({Key key, this.formKey, this.password});
+  const PasswordForm({Key key, this.formKey, this.password, this.state});
 
   _PasswordFormState createState() => _PasswordFormState();
 }
@@ -18,6 +19,8 @@ class _PasswordFormState extends State<PasswordForm> {
   TextEditingController _passwordUsernameController;
   TextEditingController _passwordPasswordController;
   TextEditingController _passwordRepeatPasswordController;
+  
+  String currentGroup;
 
   DateTime _expiryDateTime;
 
@@ -47,6 +50,10 @@ class _PasswordFormState extends State<PasswordForm> {
             ? this.widget.password.encPassword
             : null);
 
+    if (this.widget.password.group != null) {
+      currentGroup = this.widget.password.group;
+    }
+
     super.initState();
   }
 
@@ -61,11 +68,13 @@ class _PasswordFormState extends State<PasswordForm> {
   }
 
   void groupChanged(dynamic inp) {
-    print("Password Group Changed");
+    this.widget.password.group = inp;
   }
 
   @override
   Widget build(BuildContext context) {
+    API api = Provider.of<API>(context);
+
     return Form(
       key: this.widget.formKey,
       child: Column(
@@ -190,26 +199,23 @@ class _PasswordFormState extends State<PasswordForm> {
               });
             },
           ),
-          DropdownButtonFormField(
-            onChanged: groupChanged,
-            items: <DropdownMenuItem>[
-              DropdownMenuItem(
-                value: "Group 1",
-                child: Text("Group 1"),
-              ),
-              DropdownMenuItem(
-                value: "Group 2",
-                child: Text("Group 2"),
-              ),
-              DropdownMenuItem(
-                value: "Group 3",
-                child: Text("Group 3"),
-              ),
-              DropdownMenuItem(
-                value: "Group 4",
-                child: Text("Group 4"),
-              )
-            ],
+          FutureBuilder<List<PasswordGroupModel>>(
+            future: api.fetchAllGroups(),
+            builder: (BuildContext context,
+                AsyncSnapshot<List<PasswordGroupModel>> snapshot) {
+              if (!snapshot.hasData) {
+                return CircularProgressIndicator();
+              }
+
+              List<DropdownMenuItem<dynamic>> itemList = [];
+              snapshot.data.forEach((element) {
+                itemList.add(DropdownMenuItem(
+                    value: element.id, child: Text(element.name)));
+              });
+
+              return DropdownButtonFormField(
+                  items: itemList, onChanged: groupChanged);
+            },
           ),
           ButtonBar(
             children: <Widget>[
@@ -217,7 +223,7 @@ class _PasswordFormState extends State<PasswordForm> {
                   onPressed: () {
                     Navigator.pop(context);
                   },
-                  child: Text('Discard Changes'),
+                  child: Text('Discard'),
                   color: Theme.of(context).errorColor),
               FlatButton(
                 onPressed: () {
@@ -229,10 +235,14 @@ class _PasswordFormState extends State<PasswordForm> {
 
                   // Save data
                   API api = Provider.of<API>(context, listen: false);
-                  api.updatePassword(this.widget.password);
-                  print("Updated data");
+                  if (this.widget.state == "update") {
+                    api.updatePassword(this.widget.password);
+                  } else if (this.widget.state == "create") {
+                    api.createPassword(this.widget.password);
+                  }
+                  Navigator.pop(context);
                 },
-                child: Text("Save Changes"),
+                child: Text("Save"),
                 color: Theme.of(context).buttonColor,
               ),
             ],
