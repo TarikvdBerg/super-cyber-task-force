@@ -32,16 +32,12 @@ class AddGroupFormState extends State<AddGroupForm> {
                 FlatButton(
                   child: Text("Cancel"),
                   color: Theme.of(context).errorColor,
-                  onPressed: () {
-                    print("Cancel Pressed");
-                  },
+                  onPressed: () {},
                 ),
                 FlatButton(
                   child: Text("Add"),
                   color: Theme.of(context).buttonColor,
-                  onPressed: () {
-                    print("Add Pressed");
-                  },
+                  onPressed: () {},
                 )
               ],
             )
