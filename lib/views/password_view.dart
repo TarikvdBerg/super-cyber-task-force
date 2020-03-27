@@ -25,7 +25,7 @@ class PasswordView extends StatelessWidget {
                       future: api.fetchAllGroups(),
                       builder: (context, snapshot) {
                         if (snapshot.hasData) {
-                          return PasswordGroup();
+                          return PasswordGroup(passwordGroup: PasswordGroupModel(name: "Test"));
                         } else if (snapshot.hasError) {
                           return Text("${snapshot.error}");
                         }

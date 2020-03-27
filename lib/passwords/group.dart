@@ -1,16 +1,14 @@
+import 'package:SCTFPasswordManager/core/models.dart';
 import 'package:SCTFPasswordManager/passwords/password.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
 class PasswordGroup extends StatefulWidget {
   final List<Password> passwordList;
-  final String groupName;
+  final PasswordGroupModel passwordGroup;
 
-  PasswordGroup({
-    Key key,
-    this.passwordList,
-    this.groupName,
-  }) : super(key: key);
+  PasswordGroup({Key key, this.passwordList, this.passwordGroup})
+      : super(key: key);
 
   _PasswordGroupState createState() => _PasswordGroupState();
 }
@@ -39,16 +37,19 @@ class _PasswordGroupState extends State<PasswordGroup> {
                       margin: EdgeInsets.only(left: 20),
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        this.widget.groupName,
+                        this.widget.passwordGroup.name,
                         style: Theme.of(context).textTheme.headline5,
                       ));
                 },
                 body: Container(
                   margin: EdgeInsets.symmetric(vertical: 20),
-                  child: Wrap(
-                      spacing: 15,
-                      runSpacing: 20,
-                      children: this.widget.passwordList),
+                  child: Wrap(spacing: 15, runSpacing: 20, children: <Widget>[
+                    Password(
+                        model: PasswordModel(
+                            encName: "Test",
+                            encDescription: 'Test',
+                            encUsername: "Test"))
+                  ]),
                 ))
           ],
         ));
