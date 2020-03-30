@@ -1,7 +1,5 @@
-import 'package:SCTFPasswordManager/passwords/group.dart';
-import 'package:SCTFPasswordManager/passwords/password.dart';
-import 'package:SCTFPasswordManager/sidebar/sidebar.dart';
 import 'package:SCTFPasswordManager/core/models.dart';
+import 'package:SCTFPasswordManager/sidebar/sidebar.dart';
 import 'package:SCTFPasswordManager/core/api.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
@@ -24,20 +22,24 @@ class PasswordView extends StatelessWidget {
                   child: ListView(children: <Widget>[
                     FutureBuilder<List<PasswordGroupModel>>(
                       future: api.fetchAllGroups(),
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData) {
-                          return PasswordGroup();
-                        } else if (snapshot.hasError) {
-                          return Text("${snapshot.error}");
+                      builder: (BuildContext context, AsyncSnapshot<List<PasswordGroupModel>> snapshot) {
+                        if (!snapshot.hasData) {
+                          return CircularProgressIndicator();
                         }
-                        return CircularProgressIndicator();
-                      },
+
+                        List<DropdownMenuItem<dynamic>> itemList = [];
+                        snapshot.data.forEach((element) {
+                            itemList.add(DropdownMenuItem(
+                                value: element.id, child: Text(element.name)));
+                        });
+
+                        return DropdownButtonFormField(
+                              items: itemList, onChanged: (value) {api.fetchAllGroups();});
+                        }
                     ),
                   ]),
                 )
               ],
-            )
-          )
-        );
+            )));
   }
 }
