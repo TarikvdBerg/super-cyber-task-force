@@ -61,7 +61,18 @@ class _SideBarState extends State<SideBar> {
                   title: "My Passwords",
                   iconData: Icons.security,
                   pressedAction: () {
-                    Navigator.pushNamed(context, "dashboard");
+                    String targetRoute = "dashboard";
+                    bool isNewRouteSameAsCurrent = false;
+                    Navigator.popUntil(context, (route) {
+                      if (route.settings.name == targetRoute) {
+                        isNewRouteSameAsCurrent = true;
+                      }
+                      return true;
+                    });
+
+                    if (!isNewRouteSameAsCurrent) {
+                      Navigator.pushNamed(context, targetRoute);
+                    }
                   }),
 
               NavigationButton(
@@ -69,7 +80,8 @@ class _SideBarState extends State<SideBar> {
                 iconData: Icons.add,
                 pressedAction: () {
                   showDialog(
-                      context: context, builder: (BuildContext context) {
+                      context: context,
+                      builder: (BuildContext context) {
                         return AddSinglePassword();
                       });
                 },
@@ -78,7 +90,18 @@ class _SideBarState extends State<SideBar> {
                   title: "My Profile",
                   iconData: Icons.face,
                   pressedAction: () {
-                    Navigator.pushNamed(context, "MyProfile");
+                    String targetRoute = "account";
+                    bool isNewRouteSameAsCurrent = false;
+                    Navigator.popUntil(context, (route) {
+                      if (route.settings.name == targetRoute) {
+                        isNewRouteSameAsCurrent = true;
+                      }
+                      return true;
+                    });
+
+                    if (!isNewRouteSameAsCurrent) {
+                      Navigator.pushNamed(context, targetRoute);
+                    }
                   }), //NavigationButton(title: "Add group", iconData: Icons.group_add , targetURI: "AddGroup",),
               //NavigationButton(title: "Remove group", iconData: Icons.remove_circle , targetURI: "RemoveGroup",),
               //NavigationButton(title: "Edit group", iconData: Icons.edit , targetURI: "EditGroup",),

@@ -166,7 +166,7 @@ class RegisterFormState extends State<RegisterForm> {
                 children: <Widget>[
                   FlatButton(
                       onPressed: () {
-                        Navigator.pushNamed(context, "login");
+                        Navigator.of(context).pop();
                       },
                       child: Text(
                         'Back to login',

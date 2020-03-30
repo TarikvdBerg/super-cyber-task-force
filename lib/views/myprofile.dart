@@ -106,7 +106,7 @@ class MyProfileView extends StatelessWidget {
                 children: <Widget>[
                   RaisedButton(
                     onPressed: () {
-                      Navigator.pushNamed(context, "editProfile");
+                      Navigator.pushNamed(context, "editaccount");
                     },
                     child: Text('Edit'),
                   )
