@@ -1,4 +1,5 @@
 import 'package:SCTFPasswordManager/passwords/add_password.dart';
+import 'package:SCTFPasswordManager/groups/add_group.dart';
 import 'package:SCTFPasswordManager/sidebar/actionbutton.dart';
 import 'package:SCTFPasswordManager/sidebar/navigationbutton.dart';
 import 'package:SCTFPasswordManager/sidebar/profile.dart';
@@ -83,6 +84,17 @@ class _SideBarState extends State<SideBar> {
                       context: context,
                       builder: (BuildContext context) {
                         return AddSinglePassword();
+                      });
+                },
+              ),
+              NavigationButton(
+                title: "Add Group",
+                iconData: Icons.add,
+                pressedAction: () {
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AddGroupForm();
                       });
                 },
               ),
