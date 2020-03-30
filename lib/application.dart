@@ -49,7 +49,7 @@ class SCTFPasswordManager extends StatelessWidget {
           "login": (context) => LoginView(),
           'register': (context) => RegisterView(),
           "dashboard": (context) => PasswordView(),
-          'resetpassword': (context) => ResetPasswordView(),
+          'resetpassword': (context) => ResetPasswordView(), 
           'addgroup': (context) => AddGroupForm(),
           'removegroup': (context) => RemoveGroup(),
           'editgroup': (context) => EditGroup(),
