@@ -54,10 +54,12 @@ class API {
       // Handle not found request 
       case 404:
         throw ModelDoesNotExistException("");
+        break;
 
       // Handle internal server errors
       case 500:
         throw ServerErrorException(resp.body);
+        break;
     }
   }
 
@@ -93,7 +95,7 @@ class API {
   // Retrieves user information from the server. Takes in an UUID and
   // retursna Usermodel or an exception
   Future<UserModel> fetchUser(String id) async {
-    final resp = await http.get(apiURL+'users/$id', headers: getHeaders());
+    final resp = await http.get(apiURL+'users/$id/', headers: getHeaders());
 
     verifyCommonResponses(resp);
 

@@ -16,7 +16,17 @@ class PasswordView extends StatelessWidget {
             color: Theme.of(context).primaryColor,
             child: Row(
               children: <Widget>[
-                SideBar(userName: "John Doe", eMail: "john.doe@gmail.com"),
+                FutureBuilder(
+                    future:
+                        api.fetchUser("12622302-864a-4b4b-a024-3f0a0586b025"),
+                    builder: (BuildContext context,
+                        AsyncSnapshot<UserModel> snapshot) {
+                      if (!snapshot.hasData) {
+                        return CircularProgressIndicator();
+                      }
+
+                      return SideBar(model: snapshot.data);
+                    }),
                 Container(
                   width: MediaQuery.of(context).size.width - 250,
                   height: MediaQuery.of(context).size.height,

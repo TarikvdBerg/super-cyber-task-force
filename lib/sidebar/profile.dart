@@ -1,13 +1,12 @@
+import 'package:SCTFPasswordManager/core/models.dart';
 import 'package:flutter/material.dart';
 
 class SideBarProfile extends StatefulWidget {
-  final String userName;
-  final String eMail;
+  final UserModel model;
 
   const SideBarProfile({
     Key key,
-    this.userName,
-    this.eMail,
+    this.model,
   }) : super(key: key);
 
   _SideBarProfileState createState() => _SideBarProfileState();
@@ -21,13 +20,13 @@ class _SideBarProfileState extends State<SideBarProfile> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            Text(this.widget.userName,
+            Text(this.widget.model.displayName,
                 style: TextStyle(
                   color: Theme.of(context).textTheme.bodyText1.color,
                   fontSize: 20,
                   fontWeight: FontWeight.w700,
                 )),
-            Text(this.widget.eMail,
+            Text(this.widget.model.eMail,
                 style: TextStyle(
                   color: Theme.of(context).textTheme.bodyText1.color,
                   fontSize: 12

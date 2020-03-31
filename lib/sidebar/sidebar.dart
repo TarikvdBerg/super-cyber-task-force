@@ -1,3 +1,5 @@
+import 'package:SCTFPasswordManager/core/api.dart';
+import 'package:SCTFPasswordManager/core/models.dart';
 import 'package:SCTFPasswordManager/passwords/add_password.dart';
 import 'package:SCTFPasswordManager/groups/add_group.dart';
 import 'package:SCTFPasswordManager/sidebar/actionbutton.dart';
@@ -5,12 +7,12 @@ import 'package:SCTFPasswordManager/sidebar/navigationbutton.dart';
 import 'package:SCTFPasswordManager/sidebar/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:provider/provider.dart';
 
 class SideBar extends StatefulWidget {
-  final String userName;
-  final String eMail;
+  final UserModel model;
 
-  SideBar({Key key, this.userName, this.eMail}) : super(key: key);
+  SideBar({Key key, this.model}) : super(key: key);
 
   _SideBarState createState() => _SideBarState();
 }
@@ -44,14 +46,27 @@ class _SideBarState extends State<SideBar> {
 
   @override
   Widget build(BuildContext context) {
+    API api = Provider.of<API>(context);
     return Container(
       color: Theme.of(context).primaryColorDark,
       width: 250,
       height: MediaQuery.of(context).size.height,
       child: Column(
         children: <Widget>[
-          SideBarProfile(
-              userName: this.widget.userName, eMail: this.widget.eMail),
+          // If the passed model is null, retrieve user info. Else pass the local version
+          // of the User Model.
+          this.widget.model == null
+              ? FutureBuilder(
+                  future: api.fetchUser("12622302-864a-4b4b-a024-3f0a0586b025"),
+                  builder: (BuildContext context,
+                      AsyncSnapshot<UserModel> snapshot) {
+                    if (!snapshot.hasData) {
+                      return CircularProgressIndicator();
+                    }
+
+                    return SideBarProfile(model: snapshot.data);
+                  })
+              : SideBarProfile(model: this.widget.model),
           Divider(color: Theme.of(context).dividerColor),
           Container(
             margin: EdgeInsets.only(top: 10),
