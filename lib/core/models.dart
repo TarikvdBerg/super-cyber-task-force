@@ -75,9 +75,9 @@ class UserModel {
 }
 
 class PasswordGroupModel {
-  final String id;
-  final String name;
-  final DateTime validUntil;
+  String id;
+  String name;
+  DateTime validUntil;
 
   PasswordGroupModel({this.id, this.name, this.validUntil});
 
