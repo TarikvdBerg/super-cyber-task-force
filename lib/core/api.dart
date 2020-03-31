@@ -131,10 +131,12 @@ class API {
   // Updates the user information on the server. Takes in a UserModel and returns
   // an updated UserModel if the action was succesfull, throws exceptions based on
   // failure of the action.
-  Future<UserModel> updateUser(UserModel user) async {
+  Future<UserModel> updateUser(UserModel user, String password) async {
+    Map<String, dynamic> payload = user.toMap();
+    payload.addAll({"password": password});
     String uid = user.id;
-    final resp = await http.put(userURL+"$uid/", body: json.encode(user.toMap()), headers: getHeaders());
-    
+    final resp = await http.put(userURL+"$uid/", body: json.encode(payload), headers: getHeaders());
+    print(resp.body);
     verifyCommonResponses(resp);
 
     if (resp.statusCode == 200) {

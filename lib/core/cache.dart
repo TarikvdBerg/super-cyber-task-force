@@ -94,9 +94,9 @@ class Cache extends API {
   // Sends the user to be updated to the API layer and updates
   // the local version of the object. Returns the newly created
   // user.
-  Future<UserModel> updateUser(UserModel user) async {
+  Future<UserModel> updateUser(UserModel user, String password) async {
     // Push data and store the response
-    UserModel updatedUser = await super.updateUser(user);
+    UserModel updatedUser = await super.updateUser(user, password);
     store.record(userKey).update(db, updatedUser.toMap());
     return updatedUser;
   }

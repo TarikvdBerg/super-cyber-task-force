@@ -1,10 +1,10 @@
 import 'dart:convert';
 
 class AuthTokenModel {
-  final String id;
-  final String authenticationToken;
-  final DateTime expiryDate;
-  final DateTime validUntil;
+  String id;
+  String authenticationToken;
+  DateTime expiryDate;
+  DateTime validUntil;
 
   AuthTokenModel({this.id, this.authenticationToken, this.expiryDate, this.validUntil});
 
@@ -28,13 +28,13 @@ class AuthTokenModel {
 }
 
 class UserModel {
-  final String id;
-  final String userName;
-  final String eMail;
-  final String firstName;
-  final String lastName;
-  final String displayName;
-  final DateTime validUntil;
+  String id;
+  String userName;
+  String eMail;
+  String firstName;
+  String lastName;
+  String displayName;
+  DateTime validUntil;
 
   UserModel(
       {this.id,
@@ -75,9 +75,9 @@ class UserModel {
 }
 
 class PasswordGroupModel {
-  final String id;
-  final String name;
-  final DateTime validUntil;
+  String id;
+  String name;
+  DateTime validUntil;
 
   PasswordGroupModel({this.id, this.name, this.validUntil});
 
