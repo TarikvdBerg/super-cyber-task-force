@@ -35,98 +35,135 @@ class _EditProfileViewState extends State<EditProfileView> {
   Widget build(BuildContext context) {
     return AlertDialog(
       title: Text("Edit Account Details"),
-      content: Form(
-        key: _editUserFormkey,
-        child: Column(
-          children: <Widget>[
-            TextFormField(
-                decoration: InputDecoration(labelText: "Username"),
-                initialValue: this.widget.model.userName,
-                readOnly: true,
-                onSaved: (input) {}),
-            TextFormField(
-              decoration: InputDecoration(labelText: "First Name"),
-              initialValue: this.widget.model.firstName,
-              validator: (input) {
-                if (input.isEmpty) {
-                  return "First Name cannot be empty";
-                }
-                return null;
-              },
-              onSaved: (input) {
-                this.widget.model.firstName = input;
-              },
-            ),
-            TextFormField(
-              decoration: InputDecoration(labelText: "Last Name"),
-              initialValue: this.widget.model.lastName,
-              validator: (input) {
-                if (input.isEmpty) {
-                  return "Last Name cannot be empty";
-                }
-                return null;
-              },
-              onSaved: (input) {
-                this.widget.model.lastName = input;
-              },
-            ),
-            TextFormField(
-                decoration: InputDecoration(labelText: "EMail"),
-                initialValue: this.widget.model.eMail,
+      content: Container(
+        width: 500,
+        height: 400,
+        child: Form(
+          key: _editUserFormkey,
+          child: Column(
+            children: <Widget>[
+              TextFormField(
+                  decoration: InputDecoration(labelText: "Username"),
+                  initialValue: this.widget.model.userName,
+                  readOnly: true,
+                  onSaved: (input) {}),
+              TextFormField(
+                decoration: InputDecoration(labelText: "First Name"),
+                initialValue: this.widget.model.firstName,
                 validator: (input) {
                   if (input.isEmpty) {
-                    return "Email cannot be empty";
+                    return "First Name cannot be empty";
                   }
-
-                  if (!mailRegex.hasMatch(input)) {
-                    return "The provided email is not in a valid format";
-                  }
-
                   return null;
                 },
                 onSaved: (input) {
-                  this.widget.model.eMail = input;
-                }),
-            TextFormField(
-              controller: _passwordController,
-              decoration: InputDecoration(
-                  labelText: "Password",
-                  helperText: "Leave empty to keep the current password"),
-              validator: (input) {
-                if (input != _passwordRepeatController.text) {
-                  return "The password and repeated password must be identical";
-                }
-                return null;
-              },
-              onSaved: (input) {
-                inputPassword = input;
-              },
-            ),
-            TextFormField(
-              controller: _passwordRepeatController,
-              decoration: InputDecoration(
-                  labelText: "Repeat Password",
-                  helperText: "Leave empty to keep the current password"),
-              validator: (input) {
-                if (input != _passwordController.text) {
-                  return "The password and repeated password must be identical";
-                }
-                return null;
-              },
-              onSaved: (input) {
-                return;
-              },
-            )
-          ],
+                  this.widget.model.firstName = input;
+                },
+              ),
+              TextFormField(
+                decoration: InputDecoration(labelText: "Last Name"),
+                initialValue: this.widget.model.lastName,
+                validator: (input) {
+                  if (input.isEmpty) {
+                    return "Last Name cannot be empty";
+                  }
+                  return null;
+                },
+                onSaved: (input) {
+                  this.widget.model.lastName = input;
+                },
+              ),
+              TextFormField(
+                  decoration: InputDecoration(labelText: "EMail"),
+                  initialValue: this.widget.model.eMail,
+                  validator: (input) {
+                    if (input.isEmpty) {
+                      return "Email cannot be empty";
+                    }
+
+                    if (!mailRegex.hasMatch(input)) {
+                      return "The provided email is not in a valid format";
+                    }
+
+                    return null;
+                  },
+                  onSaved: (input) {
+                    this.widget.model.eMail = input;
+                  }),
+              TextFormField(
+                controller: _passwordController,
+                decoration: InputDecoration(
+                    labelText: "Password",
+                    helperText: "Leave empty to keep the current password"),
+                validator: (input) {
+                  if (input != _passwordRepeatController.text) {
+                    return "The password and repeated password must be identical";
+                  }
+                  return null;
+                },
+                onSaved: (input) {
+                  inputPassword = input;
+                },
+              ),
+              TextFormField(
+                controller: _passwordRepeatController,
+                decoration: InputDecoration(
+                    labelText: "Repeat Password",
+                    helperText: "Leave empty to keep the current password"),
+                validator: (input) {
+                  if (input != _passwordController.text) {
+                    return "The password and repeated password must be identical";
+                  }
+                  return null;
+                },
+                onSaved: (input) {
+                  return;
+                },
+              )
+            ],
+          ),
         ),
       ),
       actions: <Widget>[
+        FlatButton(
+          child: Text("Delete Account"),
+          color: Theme.of(context).errorColor,
+          onPressed: () {
+            showDialog(
+                context: context,
+                child: AlertDialog(
+                  title: Text("Delete your account"),
+                  content: Container(
+                    width: 400,
+                    child: Text(
+                      "Are you sure you want to delete your user account? This will wipe all your passwords & groups out, just like what happened to the dinosaurs. This action is IRREVERSIBLE!",
+                      style: TextStyle(fontWeight: FontWeight.w700),
+                    ),
+                  ),
+                  actions: <Widget>[
+                    FlatButton(
+                        onPressed: () {
+                          API api = Provider.of<API>(context, listen: false);
+                          api.deleteUser(this.widget.model);
+                          Navigator.popUntil(context, ModalRoute.withName('login'));
+                        }, child: Text("Delete my account"),
+                        color: Theme.of(context).errorColor),
+                    FlatButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: Text("Take me to safety"), color: Theme.of(context).buttonColor),
+                  ],
+                ));
+          },
+        ),
+        Spacer(),
         FlatButton(
             onPressed: () {
               Navigator.pop(context);
             },
             child: Text("Cancel"),
-            color: Theme.of(context).errorColor),
+            color: Theme.of(context).primaryColorLight),
         FlatButton(
             onPressed: () async {
               API api = Provider.of<API>(context, listen: false);
@@ -135,8 +172,8 @@ class _EditProfileViewState extends State<EditProfileView> {
               }
               _editUserFormkey.currentState.save();
 
-              UserModel res = await api
-                  .updateUser(this.widget.model, inputPassword);
+              UserModel res =
+                  await api.updateUser(this.widget.model, inputPassword);
               if (res != null) {
                 Navigator.pop(context);
               }
