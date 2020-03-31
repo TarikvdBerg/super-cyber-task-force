@@ -1,52 +1,35 @@
+import 'package:SCTFPasswordManager/core/api.dart';
 import 'package:SCTFPasswordManager/core/models.dart';
 import 'package:SCTFPasswordManager/groups/groupform.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class EditGroup extends StatefulWidget {
   final PasswordGroupModel group;
 
   EditGroup({this.group});
 
-  EditGroupFormState createState() => EditGroupFormState();
+  _EditGroupState createState() => _EditGroupState();
 }
 
-class EditGroupFormState extends State<EditGroup> {
-  final editGroupFormKey = GlobalKey<FormState>();
+class _EditGroupState extends State<EditGroup> {
+  GlobalKey _editGroupFormKey = GlobalKey<FormState>();
 
-  @override 
+  @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(20),
-      child: Container(
-        padding: const EdgeInsets.all(20),
-        decoration: BoxDecoration(
-          color: Theme.of(context).primaryColorLight,
-          borderRadius: BorderRadius.all(Radius.circular(10)),
-        ),
-        child: Column(
+    return AlertDialog(
+      title: Text('Edit Group'),
+      content: Container(
+        width: 400,
+        height: 300,
+        child: ListView(
           children: <Widget>[
-            Text("Edit Group", style: Theme.of(context).textTheme.headline3),
             GroupForm(
-                groupFormKey: editGroupFormKey),
-            ButtonBar(
-              alignment: MainAxisAlignment.spaceAround,
-              children: <Widget>[
-                FlatButton(
-                  child: Text("Cancel"),
-                  color: Theme.of(context).errorColor,
-                  onPressed: () {},
-                ),
-                FlatButton(
-                  child: Text("Edit"),
-                  color: Theme.of(context).buttonColor,
-                  onPressed: () {},
-                )
-              ],
-            )
+                formKey: _editGroupFormKey, group: this.widget.group, state: "update"),
           ],
         ),
-      )
+      ),
     );
   }
 }
