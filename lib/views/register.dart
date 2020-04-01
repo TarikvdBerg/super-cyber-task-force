@@ -189,7 +189,8 @@ class RegisterFormState extends State<RegisterForm> {
                           eMail: _emailController.text, firstName: _firstnameController.text,
                           lastName: _lastnameController.text
                         );
-                        var hashed_password = pbkdf12(_emailController.text, _passwordController.text)
+
+                        var hashed_password = pbkdf12(_emailController.text, _passwordController.text);
                         api.createUser(u, hashed_password);
                       }
                       // Navigator.pushNamed(context, "login");
