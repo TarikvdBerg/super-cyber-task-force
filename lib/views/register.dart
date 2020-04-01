@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:SCTFPasswordManager/core/models.dart';
 import 'package:SCTFPasswordManager/core/api.dart';
 import 'package:provider/provider.dart';
+import 'package:SCTFPasswordManager/core/hashing.dart';
+
 
 class RegisterView extends StatelessWidget {
   const RegisterView({
@@ -76,6 +78,8 @@ class RegisterFormState extends State<RegisterForm> {
   @override
   Widget build(BuildContext context) {
     API api = Provider.of<API>(context);
+
+
     return Form(
         key: _formKey,
         child: Expanded(
@@ -185,8 +189,8 @@ class RegisterFormState extends State<RegisterForm> {
                           eMail: _emailController.text, firstName: _firstnameController.text,
                           lastName: _lastnameController.text
                         );
-                        api.createUser(u, _passwordController.text).then((value) => {print(value)});
-
+                        var hashed_password = pbkdf12(_emailController.text, _passwordController.text)
+                        api.createUser(u, hashed_password);
                       }
                       // Navigator.pushNamed(context, "login");
                     },

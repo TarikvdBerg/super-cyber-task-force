@@ -1,8 +1,8 @@
-import 'package:encrypt/encrypt.dart';
-
+import 'package:steel_crypt/steel_crypt.dart';
 
 // EncryptionManager manages the encryption of strings
 class EncryptionManager {
+
   Encrypter encrypter;
 
   void setKey(String encKey ){

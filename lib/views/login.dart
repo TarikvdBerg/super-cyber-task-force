@@ -1,5 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:SCTFPasswordManager/core/hashing.dart';
+import 'package:SCTFPasswordManager/core/api.dart';
+import 'package:provider/provider.dart';
 
 class LoginView extends StatelessWidget {
   const LoginView({
@@ -52,14 +55,19 @@ class LoginFormState extends State<LoginForm> {
       _obscureText = !_obscureText;
     });
   }
+  final _usernameController = TextEditingController();
+  final _passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+    API api = Provider.of<API>(context);
+
     return Form(
       key: _loginForm,
       child: Column(
         children: <Widget>[
           TextFormField(
+            controller: _usernameController,
               decoration: const InputDecoration(
                 icon: Icon(Icons.person_outline),
                 labelText: 'Username',
@@ -71,6 +79,7 @@ class LoginFormState extends State<LoginForm> {
                 return null;
               }),
           TextFormField(
+            controller: _passwordController,
             obscureText: _obscureText,
             decoration: InputDecoration(
                 icon: Icon(Icons.lock),
@@ -113,8 +122,18 @@ class LoginFormState extends State<LoginForm> {
                   if (_loginForm.currentState.validate()) {
                     Scaffold.of(context).showSnackBar(
                         SnackBar(content: Text('Loging to firstpass')));
+                    Navigator.pushNamed(context, "dashboard");
+                    var hashedpassword = pbkdf12(_usernameController, _passwordController);
+                    var api_return = api.authenticate(_usernameController.text, hashedpassword);
+                    if (api_return == 'a okay!'){
+                      Navigator.pushNamed(context, "dashboard");
+                    }
+                    else{
+                      Scaffold.of(context).showSnackBar(
+                          SnackBar(content: Text('password or username is incorrect')));
+                    }
                   }
-                  Navigator.pushNamed(context, "dashboard");
+
                 },
                 textColor: Theme.of(context).textTheme.bodyText1.color,
                 shape: RoundedRectangleBorder(

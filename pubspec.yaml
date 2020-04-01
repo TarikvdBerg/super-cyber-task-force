@@ -20,8 +20,11 @@ dependencies:
   path_provider: ^1.6.5
   sembast:  ^2.3.0
   provider: ^4.0.4
-  encrypt: ^4.0.0
-  
+  #encrypt: ^4.0.0
+  args: ^1.5.2
+  steel_crypt: ^1.7.1+1
+
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
