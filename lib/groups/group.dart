@@ -6,10 +6,10 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class Group extends StatefulWidget {
+class PasswordGroup extends StatefulWidget {
   final PasswordGroupModel model;
 
-  Group({
+  PasswordGroup({
     Key key,
     this.model
   }) : super(key: key);
@@ -17,7 +17,7 @@ class Group extends StatefulWidget {
   _GroupState createState() => _GroupState();
 }
 
-class _GroupState extends State<Group> {
+class _GroupState extends State<PasswordGroup> {
   bool _hovered = false;
   GlobalKey _actionKey = GlobalKey();
   OverlayEntry pwOverlay;
