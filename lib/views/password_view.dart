@@ -18,7 +18,7 @@ class PasswordView extends StatelessWidget {
               children: <Widget>[
                 FutureBuilder(
                     future:
-                        api.fetchUser("39ac45fe-8dc2-45ff-850a-2af263b38c26"),
+                        api.fetchUser(),
                     builder: (BuildContext context,
                         AsyncSnapshot<UserModel> snapshot) {
                       if (!snapshot.hasData) {

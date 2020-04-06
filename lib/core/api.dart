@@ -8,7 +8,7 @@ import 'package:SCTFPasswordManager/core/models.dart';
 import 'package:http/http.dart' as http;
 
 class API {
-  static String baseURL = "http://homeland.nvmtech.nl:80/"; // The URL to send all of the requests to
+  static String baseURL = "http://localhost:8000/"; // The URL to send all of the requests to
   static String apiURL = baseURL + "api/"; // The endpoint to send API requests to
   static String userURL = apiURL + "users/"; // The endpoint to send user related requests to
   static String passwordGroupURL = apiURL + "pw_groups/"; // The endpoint to send password group related requests to
@@ -16,6 +16,8 @@ class API {
 
   String authToken; // The current authentication token for the API, if null the API is not
                     // authenticated.
+
+  UserModel user; // The currently logged in user.
 
   // Builds a Map<String, String> with the proper HTTP request headers, by default it sets
   // the content-type to application/json. If the authToken variable is set it integrates
@@ -94,8 +96,8 @@ class API {
 
   // Retrieves user information from the server. Takes in an UUID and
   // retursna Usermodel or an exception
-  Future<UserModel> fetchUser(String id) async {
-    final resp = await http.get(apiURL+'users/$id/', headers: getHeaders());
+  Future<UserModel> fetchUser() async {
+    final resp = await http.get(apiURL+'users/current/', headers: getHeaders());
 
     verifyCommonResponses(resp);
 
@@ -113,9 +115,11 @@ class API {
   Future<UserModel> createUser(UserModel user, String password) async {
     // Build payload
     Map<String, dynamic> payload = user.toMap();
-    payload.addAll({"password": password});
+    payload.addAll({"new_password": password});
 
     final resp = await http.post(userURL, body: json.encode(payload), headers: getHeaders());
+
+    verifyCommonResponses(resp);
 
     if (resp.statusCode == 201) {
       return UserModel.fromMap(json.decode(resp.body));
@@ -133,7 +137,7 @@ class API {
   // failure of the action.
   Future<UserModel> updateUser(UserModel user, String password) async {
     Map<String, dynamic> payload = user.toMap();
-    payload.addAll({"password": password});
+    payload.addAll({"new_password": password});
     String uid = user.id;
     final resp = await http.put(userURL+"$uid/", body: json.encode(payload), headers: getHeaders());
     print(resp.body);

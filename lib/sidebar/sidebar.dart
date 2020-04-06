@@ -57,7 +57,7 @@ class _SideBarState extends State<SideBar> {
           // of the User Model.
           this.widget.model == null
               ? FutureBuilder(
-                  future: api.fetchUser("39ac45fe-8dc2-45ff-850a-2af263b38c26"),
+                  future: api.fetchUser(),
                   builder: (BuildContext context,
                       AsyncSnapshot<UserModel> snapshot) {
                     if (!snapshot.hasData) {

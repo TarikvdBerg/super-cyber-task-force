@@ -13,7 +13,7 @@ class MyProfileView extends StatelessWidget {
     API api = Provider.of<API>(context);
 
     return FutureBuilder(
-      future: api.fetchUser("39ac45fe-8dc2-45ff-850a-2af263b38c26"),
+      future: api.fetchUser(),
       builder: (BuildContext context, AsyncSnapshot<UserModel> snapshot) {
         if (!snapshot.hasData) {
           return CircularProgressIndicator();

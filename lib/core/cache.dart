@@ -74,7 +74,7 @@ class Cache extends API {
   // it returns the local information.
   // If the xpirationdate has been exceeded new data is retrived form
   // the server and stored. lastly the new user model is returned.
-  Future<UserModel> fetchUser(String id) async {
+  Future<UserModel> fetchUser() async {
     // Retireve data from local storage and verify if it is valid
     Map<String, dynamic> dbData = store.record(userKey) as Map<String, dynamic>;
     
@@ -86,7 +86,7 @@ class Cache extends API {
     }
     
     // Data wasn't valid, retrieve form the server
-    UserModel retrievedUser = await super.fetchUser(id);
+    UserModel retrievedUser = await super.fetchUser();
     store.record(userKey).put(db, retrievedUser.toMap());
     return retrievedUser;
   }
