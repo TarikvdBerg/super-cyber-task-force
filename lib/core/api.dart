@@ -8,7 +8,7 @@ import 'package:SCTFPasswordManager/core/models.dart';
 import 'package:http/http.dart' as http;
 
 class API {
-  static String baseURL = "http://localhost:8000/"; // The URL to send all of the requests to
+  static String baseURL = "http://homeland.nvmtech.nl:80/"; // The URL to send all of the requests to
   static String apiURL = baseURL + "api/"; // The endpoint to send API requests to
   static String userURL = apiURL + "users/"; // The endpoint to send user related requests to
   static String passwordGroupURL = apiURL + "pw_groups/"; // The endpoint to send password group related requests to
