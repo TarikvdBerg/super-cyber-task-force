@@ -1,4 +1,5 @@
 import 'package:SCTFPasswordManager/core/api.dart';
+import 'package:SCTFPasswordManager/core/cache.dart';
 import 'package:SCTFPasswordManager/core/models.dart';
 import 'package:SCTFPasswordManager/passwords/add_password.dart';
 import 'package:SCTFPasswordManager/groups/add_group.dart';
@@ -46,7 +47,7 @@ class _SideBarState extends State<SideBar> {
 
   @override
   Widget build(BuildContext context) {
-    API api = Provider.of<API>(context);
+    Cache api = Provider.of<Cache>(context);
     return Container(
       color: Theme.of(context).primaryColorDark,
       width: 250,
@@ -62,6 +63,10 @@ class _SideBarState extends State<SideBar> {
                       AsyncSnapshot<UserModel> snapshot) {
                     if (!snapshot.hasData) {
                       return CircularProgressIndicator();
+                    }
+
+                    if (snapshot.hasError) {
+                      return Text(snapshot.error);
                     }
 
                     return SideBarProfile(model: snapshot.data);

@@ -1,3 +1,4 @@
+import 'package:SCTFPasswordManager/core/cache.dart';
 import 'package:SCTFPasswordManager/core/models.dart';
 import 'package:SCTFPasswordManager/passwords/password.dart';
 import 'package:SCTFPasswordManager/sidebar/sidebar.dart';
@@ -9,7 +10,7 @@ import 'package:SCTFPasswordManager/passwords/group.dart';
 class PasswordView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    API api = Provider.of<API>(context);
+    Cache api = Provider.of<Cache>(context);
     api.authenticate("NielsVM", "Develop1");
     return Scaffold(
         body: Container(

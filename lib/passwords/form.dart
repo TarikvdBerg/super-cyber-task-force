@@ -1,4 +1,5 @@
 import 'package:SCTFPasswordManager/core/api.dart';
+import 'package:SCTFPasswordManager/core/cache.dart';
 import 'package:flutter/material.dart';
 import 'package:SCTFPasswordManager/core/models.dart';
 import 'package:provider/provider.dart';
@@ -73,7 +74,7 @@ class _PasswordFormState extends State<PasswordForm> {
 
   @override
   Widget build(BuildContext context) {
-    API api = Provider.of<API>(context);
+    Cache api = Provider.of<Cache>(context);
 
     return Form(
       key: this.widget.formKey,
@@ -234,7 +235,7 @@ class _PasswordFormState extends State<PasswordForm> {
                   this.widget.formKey.currentState.save();
 
                   // Save data
-                  API api = Provider.of<API>(context, listen: false);
+                  Cache api = Provider.of<Cache>(context, listen: false);
                   if (this.widget.state == "update") {
                     api.updatePassword(this.widget.password);
                   } else if (this.widget.state == "create") {

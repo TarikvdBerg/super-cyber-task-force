@@ -1,4 +1,5 @@
 import 'package:SCTFPasswordManager/core/api.dart';
+import 'package:SCTFPasswordManager/core/cache.dart';
 import 'package:SCTFPasswordManager/core/models.dart';
 import 'package:SCTFPasswordManager/passwords/password.dart';
 import 'package:SCTFPasswordManager/groups/edit_group.dart';
@@ -36,7 +37,7 @@ class _PasswordGroupState extends State<PasswordGroup> {
             FlatButton(
               child: const Text("Delete"),
               onPressed: () async {
-                API api = Provider.of<API>(context, listen: false);
+                Cache api = Provider.of<Cache>(context, listen: false);
                 bool res = await api.deleteGroup(group);
                 if (res) {
                   Navigator.pop(context);
@@ -128,7 +129,7 @@ class _PasswordGroupState extends State<PasswordGroup> {
 
   @override
   Widget build(BuildContext context) {
-    API api = Provider.of<API>(context);
+    Cache api = Provider.of<Cache>(context);
 
     return Container(
       color: Theme.of(context).primaryColorDark,

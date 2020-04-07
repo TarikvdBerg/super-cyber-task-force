@@ -1,4 +1,5 @@
 import 'package:SCTFPasswordManager/core/api.dart';
+import 'package:SCTFPasswordManager/core/cache.dart';
 import 'package:SCTFPasswordManager/core/models.dart';
 import 'package:SCTFPasswordManager/sidebar/sidebar.dart';
 import 'package:SCTFPasswordManager/views/editprofile.dart';
@@ -10,7 +11,7 @@ final double sizeBetweenEntries = 15;
 class MyProfileView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    API api = Provider.of<API>(context);
+    Cache api = Provider.of<Cache>(context);
 
     return FutureBuilder(
       future: api.fetchUser(),

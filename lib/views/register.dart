@@ -1,3 +1,4 @@
+import 'package:SCTFPasswordManager/core/cache.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:SCTFPasswordManager/core/models.dart';
@@ -73,7 +74,7 @@ class RegisterFormState extends State<RegisterForm> {
 
   @override
   Widget build(BuildContext context) {
-    API api = Provider.of<API>(context);
+    Cache api = Provider.of<Cache>(context);
     return Form(
         key: _formKey,
         child: Expanded(

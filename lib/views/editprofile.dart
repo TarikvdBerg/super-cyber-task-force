@@ -1,4 +1,5 @@
 import 'package:SCTFPasswordManager/core/api.dart';
+import 'package:SCTFPasswordManager/core/cache.dart';
 import 'package:SCTFPasswordManager/core/models.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -143,7 +144,7 @@ class _EditProfileViewState extends State<EditProfileView> {
                   actions: <Widget>[
                     FlatButton(
                         onPressed: () {
-                          API api = Provider.of<API>(context, listen: false);
+                          Cache api = Provider.of<Cache>(context, listen: false);
                           api.deleteUser(this.widget.model);
                           Navigator.popUntil(context, ModalRoute.withName('login'));
                         }, child: Text("Delete my account"),
@@ -166,7 +167,7 @@ class _EditProfileViewState extends State<EditProfileView> {
             color: Theme.of(context).primaryColorLight),
         FlatButton(
             onPressed: () async {
-              API api = Provider.of<API>(context, listen: false);
+              Cache api = Provider.of<Cache>(context, listen: false);
               if (!_editUserFormkey.currentState.validate()) {
                 return;
               }

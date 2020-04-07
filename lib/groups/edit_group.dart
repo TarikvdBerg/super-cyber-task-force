@@ -1,9 +1,7 @@
-import 'package:SCTFPasswordManager/core/api.dart';
 import 'package:SCTFPasswordManager/core/models.dart';
 import 'package:SCTFPasswordManager/groups/groupform.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class EditGroup extends StatefulWidget {
   final PasswordGroupModel group;

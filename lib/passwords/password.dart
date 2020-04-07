@@ -1,4 +1,5 @@
 import 'package:SCTFPasswordManager/core/api.dart';
+import 'package:SCTFPasswordManager/core/cache.dart';
 import 'package:SCTFPasswordManager/core/models.dart';
 import 'package:SCTFPasswordManager/passwords/edit_password.dart';
 import 'package:flutter/gestures.dart';
@@ -39,7 +40,7 @@ class _PasswordState extends State<Password> {
             FlatButton(
               child: const Text("Delete"),
               onPressed: () async {
-                API api = Provider.of<API>(context, listen: false);
+                Cache api = Provider.of<Cache>(context, listen: false);
                 bool res = await api.deletePassword(password);
                 if (res) {
                   Navigator.pop(context);
