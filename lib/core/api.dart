@@ -17,6 +17,8 @@ class API {
   String authToken; // The current authentication token for the API, if null the API is not
                     // authenticated.
 
+  UserModel user; // The currently logged in user.
+
   // Builds a Map<String, String> with the proper HTTP request headers, by default it sets
   // the content-type to application/json. If the authToken variable is set it integrates
   // this into the authorization header.
@@ -54,10 +56,12 @@ class API {
       // Handle not found request 
       case 404:
         throw ModelDoesNotExistException("");
+        break;
 
       // Handle internal server errors
       case 500:
         throw ServerErrorException(resp.body);
+        break;
     }
   }
 
@@ -92,8 +96,8 @@ class API {
 
   // Retrieves user information from the server. Takes in an UUID and
   // retursna Usermodel or an exception
-  Future<UserModel> fetchUser(String id) async {
-    final resp = await http.get(apiURL+'users/$id', headers: getHeaders());
+  Future<UserModel> fetchUser() async {
+    final resp = await http.get(apiURL+'users/current/', headers: getHeaders());
 
     verifyCommonResponses(resp);
 
@@ -111,9 +115,11 @@ class API {
   Future<UserModel> createUser(UserModel user, String password) async {
     // Build payload
     Map<String, dynamic> payload = user.toMap();
-    payload.addAll({"password": password});
+    payload.addAll({"new_password": password});
 
     final resp = await http.post(userURL, body: json.encode(payload), headers: getHeaders());
+
+    verifyCommonResponses(resp);
 
     if (resp.statusCode == 201) {
       return UserModel.fromMap(json.decode(resp.body));
@@ -129,10 +135,12 @@ class API {
   // Updates the user information on the server. Takes in a UserModel and returns
   // an updated UserModel if the action was succesfull, throws exceptions based on
   // failure of the action.
-  Future<UserModel> updateUser(UserModel user) async {
+  Future<UserModel> updateUser(UserModel user, String password) async {
+    Map<String, dynamic> payload = user.toMap();
+    payload.addAll({"new_password": password});
     String uid = user.id;
-    final resp = await http.put(userURL+"$uid/", body: json.encode(user.toMap()), headers: getHeaders());
-    
+    final resp = await http.put(userURL+"$uid/", body: json.encode(payload), headers: getHeaders());
+    print(resp.body);
     verifyCommonResponses(resp);
 
     if (resp.statusCode == 200) {
@@ -236,8 +244,6 @@ class API {
 
     verifyCommonResponses(resp);
 
-    print(resp.statusCode);
-
     if (resp.statusCode == 200) {
       return parsePasswords(resp.body);
     } else {
@@ -281,12 +287,8 @@ class API {
     String pid = password.id;
     final resp = await http.put(passwordURL+"$pid/", body: json.encode(password.toMap()), headers: getHeaders());
 
-    try {
-      verifyCommonResponses(resp);
-    } catch (e) {
-      print(e.errorMessage());
-    }
-    print(resp.statusCode);
+    verifyCommonResponses(resp);
+    
     if (resp.statusCode == 200) {
       return PasswordModel.fromMap(json.decode(resp.body));
     } else {  

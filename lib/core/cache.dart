@@ -10,6 +10,8 @@ String authKey = "authentication";
 String passwordGroupKeyPrefix = "pwg-";
 String passwordKeyPrefix = "pw-";
 
+Duration cacheTimeout = Duration(hours: 6);
+
 
 class Cache extends API {
   Database db;
@@ -74,30 +76,31 @@ class Cache extends API {
   // it returns the local information.
   // If the xpirationdate has been exceeded new data is retrived form
   // the server and stored. lastly the new user model is returned.
-  Future<UserModel> fetchUser(String id) async {
+  Future<UserModel> fetchUser() async {
     // Retireve data from local storage and verify if it is valid
-    Map<String, dynamic> dbData = store.record(userKey) as Map<String, dynamic>;
+    Map<String, dynamic> dbData = await store.record(userKey).get(db) as Map<String, dynamic>;
     
     if (dbData != null) {
       UserModel user = UserModel.fromMap(dbData);
-      if (DateTime.now().isBefore(user.validUntil)) {
-        return user;
-      }
+      // if (DateTime.now().isBefore(user.validUntil)) {
+      //   return user;
+      // }
+      return user;
     }
     
     // Data wasn't valid, retrieve form the server
-    UserModel retrievedUser = await super.fetchUser(id);
-    store.record(userKey).put(db, retrievedUser.toMap());
+    UserModel retrievedUser = await super.fetchUser();
+    await store.record(userKey).put(db, retrievedUser.toMap());
     return retrievedUser;
   }
 
   // Sends the user to be updated to the API layer and updates
   // the local version of the object. Returns the newly created
   // user.
-  Future<UserModel> updateUser(UserModel user) async {
+  Future<UserModel> updateUser(UserModel user, String password) async {
     // Push data and store the response
-    UserModel updatedUser = await super.updateUser(user);
-    store.record(userKey).update(db, updatedUser.toMap());
+    UserModel updatedUser = await super.updateUser(user, password);
+    await store.record(userKey).update(db, updatedUser.toMap());
     return updatedUser;
   }
 
@@ -107,10 +110,21 @@ class Cache extends API {
     // Delete usere and delete locally
     bool isSuccess = await super.deleteUser(user);
     if (isSuccess) {
-      store.record(userKey).delete(db); 
+      await store.record(userKey).delete(db); 
     }
 
     return isSuccess;
+  }
+
+  // Fetches all the password groups from the server and stores them in local cache.
+  Future<List<PasswordGroupModel>> fetchAllGroups() async {
+
+    List<PasswordGroupModel> groups = await super.fetchAllGroups();
+    groups.forEach((element) async {
+      await store.record(passwordGroupKeyPrefix+element.id).put(db, element.toMap());
+    });
+
+    return groups;
   }
   
   // Checks the local cache for the request group and verifies if it's validUntil
@@ -128,8 +142,19 @@ class Cache extends API {
 
     // Data has expired, fetch new and store it
     PasswordGroupModel fetchedPasswordGroup = await super.fetchGroup(id);
-    store.record(passwordGroupKeyPrefix+id).add(db, fetchedPasswordGroup.toMap());
+    await store.record(passwordGroupKeyPrefix+id).add(db, fetchedPasswordGroup.toMap());
     return fetchedPasswordGroup;
+  }
+
+  Future<PasswordGroupModel> createGroup(PasswordGroupModel group) async {
+    // Create remote
+    PasswordGroupModel newGroup = await super.createGroup(group);
+
+    if (newGroup != null) {
+      await store.record(passwordGroupKeyPrefix+newGroup.id).put(db, newGroup.toMap());
+    }
+
+    return newGroup;
   }
 
   // Updates a password group and stores the result locally. Returns a 
@@ -137,7 +162,7 @@ class Cache extends API {
   Future<PasswordGroupModel> updateGroup(PasswordGroupModel group) async {
     // Update the remote version and store returned data in local database
     PasswordGroupModel updatedGroup = await super.updateGroup(group);
-    store.record(passwordGroupKeyPrefix+updatedGroup.id).update(db, updatedGroup.toMap());
+    await store.record(passwordGroupKeyPrefix+updatedGroup.id).update(db, updatedGroup.toMap());
 
     return updatedGroup;
   }
@@ -147,10 +172,21 @@ class Cache extends API {
   Future<bool> deleteGroup(PasswordGroupModel group) async {
     bool isSuccess = await super.deleteGroup(group);
     if (isSuccess) {
-      store.record(passwordGroupKeyPrefix+group.id).delete(db);
+      await store.record(passwordGroupKeyPrefix+group.id).delete(db);
     }
 
     return isSuccess;
+  }
+
+  // Fetches all passwords from the database
+  Future<List<PasswordModel>> fetchAllPasswords() async  {
+    List<PasswordModel> passwords = await super.fetchAllPasswords();
+    passwords.forEach((element) async  {
+      await store.record(passwordKeyPrefix+element.id).put(db, element.toMap());
+    });
+
+    return passwords;
+
   }
 
   // Fetches the requested password from the local database and checks
@@ -167,7 +203,7 @@ class Cache extends API {
 
     // Data wasn't valid, retrieve a new version
     PasswordModel newPassword = await super.fetchPassword(id);
-    store.record(passwordKeyPrefix+newPassword.id).put(db, newPassword.toMap());
+    await store.record(passwordKeyPrefix+newPassword.id).put(db, newPassword.toMap());
     return newPassword;
   }
 
@@ -175,7 +211,7 @@ class Cache extends API {
   Future<PasswordModel> updatePassword(PasswordModel password) async {
     // Update password & store returned version
     PasswordModel updatedPassword = await super.updatePassword(password);
-    store.record(passwordKeyPrefix+updatedPassword.id).update(db, password.toMap());
+    await store.record(passwordKeyPrefix+updatedPassword.id).update(db, password.toMap());
     return updatedPassword;
   }
 
@@ -184,7 +220,7 @@ class Cache extends API {
     // Delete password & delete local version
     bool isSuccess = await super.deletePassword(password);
     if (isSuccess) {
-      store.record(passwordKeyPrefix+password.id).delete(db);
+      await store.record(passwordKeyPrefix+password.id).delete(db);
     }
 
     return isSuccess;

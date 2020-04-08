@@ -1,14 +1,19 @@
+import 'package:SCTFPasswordManager/core/api.dart';
+import 'package:SCTFPasswordManager/core/cache.dart';
+import 'package:SCTFPasswordManager/core/models.dart';
+import 'package:SCTFPasswordManager/passwords/add_password.dart';
+import 'package:SCTFPasswordManager/groups/add_group.dart';
 import 'package:SCTFPasswordManager/sidebar/actionbutton.dart';
 import 'package:SCTFPasswordManager/sidebar/navigationbutton.dart';
 import 'package:SCTFPasswordManager/sidebar/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:provider/provider.dart';
 
 class SideBar extends StatefulWidget {
-  final String userName;
-  final String eMail;
+  final UserModel model;
 
-  SideBar({Key key, this.userName, this.eMail}) : super(key: key);
+  SideBar({Key key, this.model}) : super(key: key);
 
   _SideBarState createState() => _SideBarState();
 }
@@ -23,7 +28,8 @@ class _SideBarState extends State<SideBar> {
           actions: <Widget>[
             FlatButton(
               onPressed: () {
-                return Navigator.popUntil(context, ModalRoute.withName("login"));
+                return Navigator.popUntil(
+                    context, ModalRoute.withName("login"));
               },
               child: const Text("Log out"),
             ),
@@ -41,24 +47,94 @@ class _SideBarState extends State<SideBar> {
 
   @override
   Widget build(BuildContext context) {
+    Cache api = Provider.of<Cache>(context);
     return Container(
       color: Theme.of(context).primaryColorDark,
       width: 250,
       height: MediaQuery.of(context).size.height,
       child: Column(
         children: <Widget>[
-          SideBarProfile(
-              userName: this.widget.userName, eMail: this.widget.eMail),
+          // If the passed model is null, retrieve user info. Else pass the local version
+          // of the User Model.
+          this.widget.model == null
+              ? FutureBuilder(
+                  future: api.fetchUser(),
+                  builder: (BuildContext context,
+                      AsyncSnapshot<UserModel> snapshot) {
+                    if (!snapshot.hasData) {
+                      return CircularProgressIndicator();
+                    }
+
+                    if (snapshot.hasError) {
+                      return Text(snapshot.error);
+                    }
+
+                    return SideBarProfile(model: snapshot.data);
+                  })
+              : SideBarProfile(model: this.widget.model),
           Divider(color: Theme.of(context).dividerColor),
           Container(
             margin: EdgeInsets.only(top: 10),
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height - 99,
             child: Column(children: <Widget>[
-              NavigationButton(title: "My Passwords", iconData: Icons.security),
-              NavigationButton(title: "Add Password", iconData: Icons.add),
-              NavigationButton(title: "My Profile", iconData: Icons.face, targetURI: 'MyAccount',),
-              //NavigationButton(title: "Add group", iconData: Icons.group_add , targetURI: "AddGroup",),
+              NavigationButton(
+                  title: "My Passwords",
+                  iconData: Icons.security,
+                  pressedAction: () {
+                    String targetRoute = "dashboard";
+                    bool isNewRouteSameAsCurrent = false;
+                    Navigator.popUntil(context, (route) {
+                      if (route.settings.name == targetRoute) {
+                        isNewRouteSameAsCurrent = true;
+                      }
+                      return true;
+                    });
+
+                    if (!isNewRouteSameAsCurrent) {
+                      Navigator.pushNamed(context, targetRoute);
+                    }
+                  }),
+
+              NavigationButton(
+                title: "Add Password",
+                iconData: Icons.add,
+                pressedAction: () {
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AddSinglePassword();
+                      });
+                },
+              ),
+              NavigationButton(
+                title: "Add Group",
+                iconData: Icons.add,
+                pressedAction: () {
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AddGroupForm();
+                      });
+                },
+              ),
+              NavigationButton(
+                  title: "My Profile",
+                  iconData: Icons.face,
+                  pressedAction: () {
+                    String targetRoute = "account";
+                    bool isNewRouteSameAsCurrent = false;
+                    Navigator.popUntil(context, (route) {
+                      if (route.settings.name == targetRoute) {
+                        isNewRouteSameAsCurrent = true;
+                      }
+                      return true;
+                    });
+
+                    if (!isNewRouteSameAsCurrent) {
+                      Navigator.pushNamed(context, targetRoute);
+                    }
+                  }), //NavigationButton(title: "Add group", iconData: Icons.group_add , targetURI: "AddGroup",),
               //NavigationButton(title: "Remove group", iconData: Icons.remove_circle , targetURI: "RemoveGroup",),
               //NavigationButton(title: "Edit group", iconData: Icons.edit , targetURI: "EditGroup",),
               Spacer(),

@@ -1,12 +1,9 @@
-import 'dart:ffi';
-
+import 'package:SCTFPasswordManager/core/cache.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:SCTFPasswordManager/core/models.dart';
 import 'package:SCTFPasswordManager/core/api.dart';
 import 'package:provider/provider.dart';
-import 'package:SCTFPasswordManager/core/hashing.dart';
-
 
 class RegisterView extends StatelessWidget {
   const RegisterView({
@@ -77,9 +74,7 @@ class RegisterFormState extends State<RegisterForm> {
 
   @override
   Widget build(BuildContext context) {
-    API api = Provider.of<API>(context);
-
-
+    Cache api = Provider.of<Cache>(context);
     return Form(
         key: _formKey,
         child: Expanded(
@@ -172,7 +167,7 @@ class RegisterFormState extends State<RegisterForm> {
                 children: <Widget>[
                   FlatButton(
                       onPressed: () {
-                        Navigator.pushNamed(context, "login");
+                        Navigator.of(context).pop();
                       },
                       child: Text(
                         'Back to login',
@@ -189,9 +184,7 @@ class RegisterFormState extends State<RegisterForm> {
                           eMail: _emailController.text, firstName: _firstnameController.text,
                           lastName: _lastnameController.text
                         );
-
-                        var hashed_password = pbkdf12(_emailController.text, _passwordController.text);
-                        api.createUser(u, hashed_password);
+                        api.createUser(u, _passwordController.text).catchError((error) => print(error.errorMessage()));
                       }
                       // Navigator.pushNamed(context, "login");
                     },

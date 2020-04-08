@@ -1,10 +1,10 @@
 import 'dart:convert';
 
 class AuthTokenModel {
-  final String id;
-  final String authenticationToken;
-  final DateTime expiryDate;
-  final DateTime validUntil;
+  String id;
+  String authenticationToken;
+  DateTime expiryDate;
+  DateTime validUntil;
 
   AuthTokenModel({this.id, this.authenticationToken, this.expiryDate, this.validUntil});
 
@@ -28,13 +28,13 @@ class AuthTokenModel {
 }
 
 class UserModel {
-  final String id;
-  final String userName;
-  final String eMail;
-  final String firstName;
-  final String lastName;
-  final String displayName;
-  final DateTime validUntil;
+  String id;
+  String userName;
+  String eMail;
+  String firstName;
+  String lastName;
+  String displayName;
+  DateTime validUntil;
 
   UserModel(
       {this.id,
@@ -75,9 +75,9 @@ class UserModel {
 }
 
 class PasswordGroupModel {
-  final String id;
-  final String name;
-  final DateTime validUntil;
+  String id;
+  String name;
+  DateTime validUntil;
 
   PasswordGroupModel({this.id, this.name, this.validUntil});
 
@@ -111,17 +111,20 @@ List<PasswordGroupModel> parsePasswordGroups(String body) {
 }
 
 class PasswordModel {
-  final String id;
-  final String encName;
-  final String encDescription;
-  final String encPassword;
-  final String group;
-  final DateTime validUntil;
+  String id;
+  String encName;
+  String encDescription;
+  String encUsername;
+  String encPassword;
+  String imgURL = "https://previews.123rf.com/images/rehabicons/rehabicons1804/rehabicons180400100/100306605-locker-icon-vector-padlock-symbol-key-lock-illustration-privacy-and-password-icon.jpg"; 
+  String group;
+  DateTime validUntil;
 
   PasswordModel(
       {this.id,
       this.encName,
       this.encDescription,
+      this.encUsername,
       this.encPassword,
       this.group,
       this.validUntil});
@@ -131,6 +134,7 @@ class PasswordModel {
       "id": this.id,
       "enc_name": this.encName,
       "enc_description": this.encDescription,
+      "enc_username": this.encUsername,
       "enc_password": this.encPassword,
       "parent_group": this.group,
       "valid_unitl": this.validUntil,
@@ -142,8 +146,10 @@ class PasswordModel {
       id: map["id"],
       encName: map["enc_name"],
       encDescription: map["enc_description"],
+      encUsername: map["enc_username"],
       encPassword: map["enc_password"],
       group: map["parent_group"],
+      validUntil: map["valid_until"],
     );
   }
 

@@ -72,7 +72,7 @@ class PasswordResetFormState extends State<PasswordResetForm> {
             alignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               FlatButton(
-                  onPressed: () {Navigator.pushNamed(context, "login");},
+                  onPressed: () {Navigator.pop(context);},
                   child: Text(
                     'Back to login',
                     style: TextStyle(
@@ -86,7 +86,7 @@ class PasswordResetFormState extends State<PasswordResetForm> {
                     Scaffold.of(context).showSnackBar(
                         SnackBar(content: Text('Password is being reset')));
                   }
-                  Navigator.pushNamed(context, "login");
+                  Navigator.pop(context);
                 },
                 textColor: Theme.of(context).textTheme.bodyText1.color,
                 shape: RoundedRectangleBorder(

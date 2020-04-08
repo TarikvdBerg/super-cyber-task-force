@@ -3,14 +3,10 @@ import 'package:flutter/material.dart';
 class NavigationButton extends StatefulWidget {
   final String title;
   final IconData iconData;
-  final String targetURI;
+  final Function pressedAction;
 
-  const NavigationButton({Key key, this.iconData, this.title, this.targetURI})
+  const NavigationButton({Key key, this.iconData, this.title, this.pressedAction})
       : super(key: key);
-
-  // void _navigate() {
-  //   print("Navigation to " + targetURI);
-  // }
 
   _NavigationButtonState createState() => _NavigationButtonState();
 }
@@ -21,9 +17,7 @@ class _NavigationButtonState extends State<NavigationButton> {
     return Container(
       width: MediaQuery.of(context).size.width,
       child: FlatButton(
-        onPressed: () {
-          Navigator.pushNamed(context, this.widget.targetURI);
-        },
+        onPressed: this.widget.pressedAction,
         padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
         hoverColor: Theme.of(context).primaryColor,
         child: Row(children: <Widget>[

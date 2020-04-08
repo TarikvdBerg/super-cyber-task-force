@@ -1,8 +1,10 @@
 import 'package:SCTFPasswordManager/core/api.dart';
+import 'package:SCTFPasswordManager/core/cache.dart';
 import 'package:SCTFPasswordManager/core/encryption.dart';
 import 'package:SCTFPasswordManager/groups/add_group.dart';
 import 'package:SCTFPasswordManager/groups/edit_group.dart';
 import 'package:SCTFPasswordManager/groups/remove_group.dart';
+import 'package:SCTFPasswordManager/views/debug.dart';
 import 'package:SCTFPasswordManager/views/login.dart';
 import 'package:SCTFPasswordManager/views/password_view.dart';
 import 'package:SCTFPasswordManager/views/register.dart';
@@ -20,6 +22,7 @@ class SCTFPasswordManager extends StatelessWidget {
     return MultiProvider(
       providers: <Provider>[
         Provider<API>(create: (_) => API()),
+        Provider<Cache>(create: (_) => Cache()),
         Provider<EncryptionManager>(create: (_) => EncryptionManager()),
       ],
       child: MaterialApp(
@@ -48,12 +51,13 @@ class SCTFPasswordManager extends StatelessWidget {
           "login": (context) => LoginView(),
           'register': (context) => RegisterView(),
           "dashboard": (context) => PasswordView(),
-          'resetpassword': (context) => ResetPasswordView(),
-          'AddGroup': (context) => AddGroup(),
-          'RemoveGroup': (context) => RemoveGroup(),
-          'EditGroup': (context) => EditGroup(),
-          'MyAccount': (context) => MyProfileView(),
-          'editProfile': (context) => EditProfileView(),
+          'resetpassword': (context) => ResetPasswordView(), 
+          'addgroup': (context) => AddGroupForm(),
+          'removegroup': (context) => RemoveGroup(),
+          'editgroup': (context) => EditGroup(),
+          'account': (context) => MyProfileView(),
+          'editaccount': (context) => EditProfileView(),
+          'debug': (context) => DebugView(),
         },
         home: Scaffold(),
       ),
