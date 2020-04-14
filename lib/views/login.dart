@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:SCTFPasswordManager/core/hashing.dart';
 import 'package:SCTFPasswordManager/core/api.dart';
 import 'package:provider/provider.dart';
+import 'package:SCTFPasswordManager/core/cache.dart';
 
 class LoginView extends StatelessWidget {
   const LoginView({
@@ -60,7 +61,7 @@ class LoginFormState extends State<LoginForm> {
 
   @override
   Widget build(BuildContext context) {
-    API api = Provider.of<API>(context);
+    Cache api = Provider.of<Cache>(context);
 
     return Form(
       key: _loginForm,
@@ -118,19 +119,30 @@ class LoginFormState extends State<LoginForm> {
 
                   )),
               RaisedButton(
-                onPressed: () {
+                onPressed: () async {
                   if (_loginForm.currentState.validate()) {
-                    Scaffold.of(context).showSnackBar(
-                        SnackBar(content: Text('Loging to firstpass')));
-                    Navigator.pushNamed(context, "dashboard");
-                    var hashedpassword = pbkdf12(_usernameController, _passwordController);
-                    var api_return = api.authenticate(_usernameController.text, hashedpassword);
-                    if (api_return == 'a okay!'){
+
+                    var hashedpassword = pbkdf12(_usernameController.text, _passwordController.text);
+                    try {
+                      print(_usernameController.text + _passwordController.text);
+
+                      var api_return = await api.authenticate(_usernameController.text, _passwordController.text);
                       Navigator.pushNamed(context, "dashboard");
+                      _loginForm.currentState.reset();
+                      _usernameController.clear();
+                      _passwordController.clear();
+
+
+
                     }
-                    else{
+                    catch (e){
+                      print(_usernameController.text + _passwordController.text);
+
                       Scaffold.of(context).showSnackBar(
-                          SnackBar(content: Text('password or username is incorrect')));
+                          SnackBar(content: Text('Username or password was incorrect')));
+                      _loginForm.currentState.reset();
+                      _usernameController.clear();
+                      _passwordController.clear();
                     }
                   }
 

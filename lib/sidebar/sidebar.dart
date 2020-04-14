@@ -20,6 +20,7 @@ class SideBar extends StatefulWidget {
 
 class _SideBarState extends State<SideBar> {
   void confirmLogOut(context) {
+    Cache cache = Provider.of<Cache>(context);
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -28,6 +29,7 @@ class _SideBarState extends State<SideBar> {
           actions: <Widget>[
             FlatButton(
               onPressed: () {
+                cache.deAuthenticate();
                 return Navigator.popUntil(
                     context, ModalRoute.withName("login"));
               },

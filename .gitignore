@@ -16,3 +16,4 @@ packages
 # for versioning this project relative to Flutter, remove this.
 pubspec.lock
 sctflocalstorage.db
+!/.flutter-plugins-dependencies
