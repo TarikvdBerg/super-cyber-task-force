@@ -6,14 +6,19 @@ class AuthTokenModel {
   DateTime expiryDate;
   DateTime validUntil;
 
-  AuthTokenModel({this.id, this.authenticationToken, this.expiryDate, this.validUntil});
+  AuthTokenModel({
+    this.id,
+    this.authenticationToken,
+    this.expiryDate,
+    this.validUntil,
+  });
 
   Map<String, dynamic> toMap() {
     return {
       "id": this.id,
       "token": this.authenticationToken,
       "expiry_date": this.expiryDate,
-      "valid_until": this.validUntil
+      "valid_until": this.validUntil,
     };
   }
 
@@ -22,7 +27,7 @@ class AuthTokenModel {
       id: map["id"],
       authenticationToken: map["token"],
       expiryDate: map["expiry_date"],
-      validUntil: map["valid_until"]
+      validUntil: map["valid_until"],
     );
   }
 }
@@ -36,14 +41,15 @@ class UserModel {
   String displayName;
   DateTime validUntil;
 
-  UserModel(
-      {this.id,
-      this.userName,
-      this.eMail,
-      this.firstName,
-      this.lastName,
-      this.displayName,
-      this.validUntil});
+  UserModel({
+    this.id,
+    this.userName,
+    this.eMail,
+    this.firstName,
+    this.lastName,
+    this.displayName,
+    this.validUntil,
+  });
 
   Map<String, dynamic> toMap() {
     return {
@@ -59,13 +65,14 @@ class UserModel {
 
   factory UserModel.fromMap(Map<String, dynamic> map) {
     return UserModel(
-        id: map['id'],
-        userName: map['username'],
-        eMail: map['email'],
-        firstName: map['first_name'],
-        lastName: map['last_name'],
-        displayName: map['display_name'],
-        validUntil: map["'valid_until"]);
+      id: map['id'],
+      userName: map['username'],
+      eMail: map['email'],
+      firstName: map['first_name'],
+      lastName: map['last_name'],
+      displayName: map['display_name'],
+      validUntil: map['valid_until'],
+    );
   }
 
   @override
@@ -93,7 +100,7 @@ class PasswordGroupModel {
     return PasswordGroupModel(
       id: map["id"],
       name: map["enc_name"],
-      validUntil: map["valid_until"]
+      validUntil: map["valid_until"],
     );
   }
 
@@ -116,18 +123,20 @@ class PasswordModel {
   String encDescription;
   String encUsername;
   String encPassword;
-  String imgURL = "https://previews.123rf.com/images/rehabicons/rehabicons1804/rehabicons180400100/100306605-locker-icon-vector-padlock-symbol-key-lock-illustration-privacy-and-password-icon.jpg"; 
+  String imgURL =
+      "https://previews.123rf.com/images/rehabicons/rehabicons1804/rehabicons180400100/100306605-locker-icon-vector-padlock-symbol-key-lock-illustration-privacy-and-password-icon.jpg";
   String group;
   DateTime validUntil;
 
-  PasswordModel(
-      {this.id,
-      this.encName,
-      this.encDescription,
-      this.encUsername,
-      this.encPassword,
-      this.group,
-      this.validUntil});
+  PasswordModel({
+    this.id,
+    this.encName,
+    this.encDescription,
+    this.encUsername,
+    this.encPassword,
+    this.group,
+    this.validUntil,
+  });
 
   Map<String, dynamic> toMap() {
     return {
