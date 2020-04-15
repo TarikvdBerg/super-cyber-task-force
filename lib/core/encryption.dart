@@ -1,32 +1,30 @@
+import 'dart:convert';
 import 'dart:typed_data';
 
-import 'package:pointycastle/key_derivators/api.dart';
-import 'package:pointycastle/api.dart' hide SecureRandom;
-import 'package:pointycastle/key_derivators/pbkdf2.dart';
-import 'package:encrypt/encrypt.dart';
+import 'package:steel_crypt/PointyCastleN/export.dart';
+import 'package:steel_crypt/steel_crypt.dart';
 
 // EncryptionManager manages the encryption of strings
 class EncryptionManager {
-  Encrypter _encrypter;
+  static final String _keyAlgorithm = "SHA-256/HMAC/PBKDF2";
+  AesCrypt _encrypter;
 
-  void setKey(String encKey, {int iterationCount: 100100}) {
-    // desired key length = 256/8 = 32 bytes for AES key
-    final int desiredKeyLength = 32;
-    final Uint8List salt = SecureRandom(desiredKeyLength).bytes;
-    final Pbkdf2Parameters params = Pbkdf2Parameters(
-      salt,
-      iterationCount,
-      desiredKeyLength,
+  void setKey(String password, String salt, {int iterationCount: 100100}) {
+    // create key derivator for key algorithm SHA-256/HMAC/PBKDF2
+    KeyDerivator derivator = KeyDerivator(_keyAlgorithm);
+    Pbkdf2Parameters params = Pbkdf2Parameters(
+      Uint8List.fromList(salt.codeUnits),
+      100100,
+      32,
     );
-    final PBKDF2KeyDerivator derivator = PBKDF2KeyDerivator(Mac('SHA-256/HMAC'))..init(params);
-    final Key key = Key(derivator.process(Key.fromUtf8(encKey).bytes));
+    derivator.init(params);
+    var bytes = Uint8List.fromList(utf8.encode(password));
+    var key = derivator.process(bytes);
 
-    _encrypter = Encrypter(
-      AES(
-        key,
-        mode: AESMode.cbc,
-        padding: null,
-      ),
+    _encrypter = AesCrypt(
+      String.fromCharCodes(key),
+      'cbc',
+      'iso10126-2',
     );
   }
 
@@ -36,16 +34,15 @@ class EncryptionManager {
       throw Exception("Encrypter is not set");
     }
 
-    return _encrypter.encrypt(raw, iv: IV.fromLength(16)).base64;
+    return _encrypter.encrypt(raw, '0000000000000000');
   }
 
   // Decrypts a cipher
-  String decrypt(String base64) {
+  String decrypt(String ciphertext) {
     if (_encrypter == null) {
       throw Exception("Encrypter is not set");
     }
 
-    return _encrypter.decrypt(Encrypted.fromBase64(base64),
-        iv: IV.fromLength(16));
+    return _encrypter.decrypt(ciphertext, '0000000000000000');
   }
 }
