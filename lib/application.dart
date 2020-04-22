@@ -1,10 +1,6 @@
 import 'package:SCTFPasswordManager/core/api.dart';
 import 'package:SCTFPasswordManager/core/cache.dart';
 import 'package:SCTFPasswordManager/core/encryption.dart';
-import 'package:SCTFPasswordManager/groups/add_group.dart';
-import 'package:SCTFPasswordManager/groups/edit_group.dart';
-import 'package:SCTFPasswordManager/groups/remove_group.dart';
-import 'package:SCTFPasswordManager/views/debug.dart';
 import 'package:SCTFPasswordManager/views/login.dart';
 import 'package:SCTFPasswordManager/views/password_view.dart';
 import 'package:SCTFPasswordManager/views/register.dart';
@@ -52,12 +48,8 @@ class SCTFPasswordManager extends StatelessWidget {
           'register': (context) => RegisterView(),
           "dashboard": (context) => PasswordView(),
           'resetpassword': (context) => ResetPasswordView(), 
-          'addgroup': (context) => AddGroupForm(),
-          'removegroup': (context) => RemoveGroup(),
-          'editgroup': (context) => EditGroup(),
           'account': (context) => MyProfileView(),
           'editaccount': (context) => EditProfileView(),
-          'debug': (context) => DebugView(),
         },
         home: Scaffold(),
       ),

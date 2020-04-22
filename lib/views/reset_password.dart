@@ -1,3 +1,4 @@
+import 'package:SCTFPasswordManager/core/tools.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -83,8 +84,7 @@ class PasswordResetFormState extends State<PasswordResetForm> {
               RaisedButton(
                 onPressed: () {
                   if (_formKey.currentState.validate()) {
-                    Scaffold.of(context).showSnackBar(
-                        SnackBar(content: Text('Password is being reset')));
+                    showSnackbar('Password is being reset. Please check your email inbox.', context);
                   }
                   Navigator.pop(context);
                 },

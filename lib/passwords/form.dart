@@ -1,5 +1,8 @@
-import 'package:SCTFPasswordManager/core/api.dart';
+import 'dart:async';
+
 import 'package:SCTFPasswordManager/core/cache.dart';
+import 'package:SCTFPasswordManager/core/exceptions.dart';
+import 'package:SCTFPasswordManager/core/tools.dart';
 import 'package:flutter/material.dart';
 import 'package:SCTFPasswordManager/core/models.dart';
 import 'package:provider/provider.dart';
@@ -20,7 +23,7 @@ class _PasswordFormState extends State<PasswordForm> {
   TextEditingController _passwordUsernameController;
   TextEditingController _passwordPasswordController;
   TextEditingController _passwordRepeatPasswordController;
-  
+
   String currentGroup;
 
   DateTime _expiryDateTime;
@@ -208,6 +211,28 @@ class _PasswordFormState extends State<PasswordForm> {
                 return CircularProgressIndicator();
               }
 
+              if (snapshot.hasError) {
+                if (snapshot.error is RequestNotAuthenticatedException) {
+                  showSnackbar(
+                      "The current authentication credentials are invalid. Please logout and log back in.",
+                      context);
+                }
+
+                if (snapshot.error is ServerErrorException) {
+                  showSnackbar(
+                      "The server encountered an error while processing your entry. Please try again later.",
+                      context);
+                }
+                if (snapshot.error is TimeoutException) {
+                  showSnackbar(
+                      "The server took too long to respond. Please try again later.",
+                      context);
+                }
+
+                return Text(
+                    "Failed to retrieve groups, please close this popup and try again.");
+              }
+
               List<DropdownMenuItem<dynamic>> itemList = [];
               snapshot.data.forEach((element) {
                 itemList.add(DropdownMenuItem(
@@ -237,11 +262,50 @@ class _PasswordFormState extends State<PasswordForm> {
                   // Save data
                   Cache api = Provider.of<Cache>(context, listen: false);
                   if (this.widget.state == "update") {
-                    api.updatePassword(this.widget.password);
+                    try {
+                      api.updatePassword(this.widget.password);
+                      Navigator.pop(context);
+                    } on ModelDoesNotExistException {
+                      showSnackbar(
+                          "The entry you are trying to update does not exist, it might've been deleted. Refresh the application to get an up to date version of your information.",
+                          context);
+                    } on BadRequestException catch (e) {
+                      showSnackbar(
+                          'Something went wrong while updating your entry: \n' +
+                              e.errorMessage(),
+                          context);
+                    } on ServerErrorException {
+                      showSnackbar(
+                          "The server encountered an error while processing your entry. Please try again later.",
+                          context);
+                    } on TimeoutException {
+                      showSnackbar(
+                          "The server took too long to respond. Please try again later.",
+                          context);
+                    }
                   } else if (this.widget.state == "create") {
-                    api.createPassword(this.widget.password);
+                    try {
+                      api.createPassword(this.widget.password);
+                      Navigator.pop(context);
+                    } on ModelDoesNotExistException {
+                      showSnackbar(
+                          "The entry you are trying to update does not exist, it might've been deleted. Refresh the application to get an up to date version of your information.",
+                          context);
+                    } on BadRequestException catch (e) {
+                      showSnackbar(
+                          'Something went wrong while updating your entry: \n' +
+                              e.errorMessage(),
+                          context);
+                    } on ServerErrorException {
+                      showSnackbar(
+                          "The server encountered an error while processing your entry. Please try again later.",
+                          context);
+                    } on TimeoutException {
+                      showSnackbar(
+                          "The server took too long to respond. Please try again later.",
+                          context);
+                    }
                   }
-                  Navigator.pop(context);
                 },
                 child: Text("Save"),
                 color: Theme.of(context).buttonColor,

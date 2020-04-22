@@ -1,9 +1,11 @@
-import 'package:SCTFPasswordManager/core/api.dart';
+import 'dart:async';
+
 import 'package:SCTFPasswordManager/core/cache.dart';
+import 'package:SCTFPasswordManager/core/exceptions.dart';
 import 'package:SCTFPasswordManager/core/models.dart';
+import 'package:SCTFPasswordManager/core/tools.dart';
 import 'package:SCTFPasswordManager/passwords/password.dart';
 import 'package:SCTFPasswordManager/groups/edit_group.dart';
-import 'package:SCTFPasswordManager/groups/add_group.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -32,16 +34,32 @@ class _PasswordGroupState extends State<PasswordGroup> {
         return AlertDialog(
           title: const Text("Delete group"),
           content: const Text(
-              "Are you sure you want to remove this password group?"),
+              "Are you sure you want to delete this password group?"),
           actions: <Widget>[
             FlatButton(
               child: const Text("Delete"),
               onPressed: () async {
                 Cache api = Provider.of<Cache>(context, listen: false);
-                bool res = await api.deleteGroup(group);
-                if (res) {
-                  Navigator.pop(context);
-                  return null;
+                try {
+                  bool res = await api.deleteGroup(group);
+                  if (res) {
+                    Navigator.pop(context);
+                    return null;
+                  }
+                } on ModelDoesNotExistException {
+                  return;
+                } on BadRequestException {
+                  showSnackbar(
+                      "Something went wrong, please refresh your application and try again.",
+                      context);
+                } on ServerErrorException {
+                  showSnackbar(
+                      "The server encountered an error while deleting the group, please try again later.",
+                      context);
+                } on TimeoutException {
+                  showSnackbar(
+                      "The server took too long to respond, please try again later.",
+                      context);
                 }
               },
             ),
@@ -185,7 +203,22 @@ class _PasswordGroupState extends State<PasswordGroup> {
                   }
 
                   if (snapshot.hasError) {
-                    return SnackBar(content: Text(snapshot.error));
+                    if (snapshot.error is RequestNotAuthenticatedException) {
+                      showSnackbar(
+                          "The current authentication informaion is invalid. Please logout and log back in.",
+                          context);
+                    }
+                    if (snapshot.error is ServerErrorException) {
+                      showSnackbar(
+                          "The server encountered an error while retrieving information. Please try again later.",
+                          context);
+                    }
+                    if (snapshot.error is TimeoutException) {
+                      showSnackbar(
+                          "The server took too long to respond. Please try again later.",
+                          context);
+                    }
+                    return Container();
                   }
 
                   List<Password> pwList = [];

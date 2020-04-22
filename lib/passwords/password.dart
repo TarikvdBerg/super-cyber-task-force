@@ -1,6 +1,9 @@
-import 'package:SCTFPasswordManager/core/api.dart';
+import 'dart:async';
+
 import 'package:SCTFPasswordManager/core/cache.dart';
+import 'package:SCTFPasswordManager/core/exceptions.dart';
 import 'package:SCTFPasswordManager/core/models.dart';
+import 'package:SCTFPasswordManager/core/tools.dart';
 import 'package:SCTFPasswordManager/passwords/edit_password.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -41,10 +44,24 @@ class _PasswordState extends State<Password> {
               child: const Text("Delete"),
               onPressed: () async {
                 Cache api = Provider.of<Cache>(context, listen: false);
-                bool res = await api.deletePassword(password);
-                if (res) {
-                  Navigator.pop(context);
-                  return null;
+                try {
+                  bool res = await api.deletePassword(password);
+                  if (res) {
+                    Navigator.pop(context);
+                    return null;
+                  }
+                }
+                on ModelDoesNotExistException {
+                  showSnackbar("The entry you are trying to delete doesn't exist, refresh the application to get an up to date version of your information.", context);
+                }
+                on BadRequestException {
+                  showSnackbar("Something went wrong while deleting the entry. Please try again later", context);
+                }
+                on ServerErrorException {
+                  showSnackbar("The server encountered an error while processing your request. Please try again later.", context);
+                }
+                on TimeoutException {
+                  showSnackbar("The server took too long to respond. Please try again later.", context);
                 }
               },
             ),

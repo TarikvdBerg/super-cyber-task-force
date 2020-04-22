@@ -1,6 +1,9 @@
-import 'package:SCTFPasswordManager/core/api.dart';
+import 'dart:async';
+
 import 'package:SCTFPasswordManager/core/cache.dart';
+import 'package:SCTFPasswordManager/core/exceptions.dart';
 import 'package:SCTFPasswordManager/core/models.dart';
+import 'package:SCTFPasswordManager/core/tools.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -144,16 +147,30 @@ class _EditProfileViewState extends State<EditProfileView> {
                   actions: <Widget>[
                     FlatButton(
                         onPressed: () {
-                          Cache api = Provider.of<Cache>(context, listen: false);
-                          api.deleteUser(this.widget.model);
-                          Navigator.popUntil(context, ModalRoute.withName('login'));
-                        }, child: Text("Delete my account"),
+                          Cache api =
+                              Provider.of<Cache>(context, listen: false);
+                          try {
+                            api.deleteUser(this.widget.model);
+                            Navigator.popUntil(
+                                context, ModalRoute.withName('login'));
+                          } on ServerErrorException {
+                            showSnackbar(
+                                "The server encountered an error while processing your account deletion. Please try again later.",
+                                context);
+                          } on TimeoutException {
+                            showSnackbar(
+                                'The server took too long to respond. Please try again later.',
+                                context);
+                          }
+                        },
+                        child: Text("Delete my account"),
                         color: Theme.of(context).errorColor),
                     FlatButton(
                         onPressed: () {
                           Navigator.pop(context);
                         },
-                        child: Text("Take me to safety"), color: Theme.of(context).buttonColor),
+                        child: Text("Take me to safety"),
+                        color: Theme.of(context).buttonColor),
                   ],
                 ));
           },
@@ -173,10 +190,24 @@ class _EditProfileViewState extends State<EditProfileView> {
               }
               _editUserFormkey.currentState.save();
 
-              UserModel res =
-                  await api.updateUser(this.widget.model, inputPassword);
-              if (res != null) {
-                Navigator.pop(context);
+              try {
+                UserModel res =
+                    await api.updateUser(this.widget.model, inputPassword);
+                if (res != null) {
+                  Navigator.pop(context);
+                }
+              } on RequestNotAuthenticatedException {
+                showSnackbar(
+                    "The current authentication credentials are invalid. Please log out and log back in.",
+                    context);
+              } on ServerErrorException {
+                showSnackbar(
+                    "The server encountered an error while processing your account deletion. Please try again later.",
+                    context);
+              } on TimeoutException {
+                showSnackbar(
+                    'The server took too long to respond. Please try again later.',
+                    context);
               }
             },
             child: Text("Save"),

@@ -1,7 +1,10 @@
+import 'dart:async';
+
+import 'package:SCTFPasswordManager/core/exceptions.dart';
+import 'package:SCTFPasswordManager/core/tools.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:SCTFPasswordManager/core/hashing.dart';
-import 'package:SCTFPasswordManager/core/api.dart';
 import 'package:provider/provider.dart';
 import 'package:SCTFPasswordManager/core/cache.dart';
 
@@ -56,6 +59,7 @@ class LoginFormState extends State<LoginForm> {
       _obscureText = !_obscureText;
     });
   }
+
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
 
@@ -68,7 +72,7 @@ class LoginFormState extends State<LoginForm> {
       child: Column(
         children: <Widget>[
           TextFormField(
-            controller: _usernameController,
+              controller: _usernameController,
               decoration: const InputDecoration(
                 icon: Icon(Icons.person_outline),
                 labelText: 'Username',
@@ -113,39 +117,37 @@ class LoginFormState extends State<LoginForm> {
                   onPressed: () {
                     Navigator.pushNamed(context, "resetpassword");
                   },
-                  child: Text('Reset password', style: TextStyle(
-                    color: Theme.of(context).textTheme.bodyText1.color,
-                    decoration: TextDecoration.underline),
-
+                  child: Text(
+                    'Reset password',
+                    style: TextStyle(
+                        color: Theme.of(context).textTheme.bodyText1.color,
+                        decoration: TextDecoration.underline),
                   )),
               RaisedButton(
                 onPressed: () async {
                   if (_loginForm.currentState.validate()) {
-
-                    var hashedpassword = pbkdf12(_usernameController.text, _passwordController.text);
+                    var hashedpassword = pbkdf12(
+                        _usernameController.text, _passwordController.text);
                     try {
-                      print(_usernameController.text + _passwordController.text);
-
-                      var api_return = await api.authenticate(_usernameController.text, _passwordController.text);
+                      var api_return = await api.authenticate(
+                          _usernameController.text, _passwordController.text);
                       Navigator.pushNamed(context, "dashboard");
                       _loginForm.currentState.reset();
                       _usernameController.clear();
                       _passwordController.clear();
-
-
-
                     }
-                    catch (e){
-                      print(_usernameController.text + _passwordController.text);
-
-                      Scaffold.of(context).showSnackBar(
-                          SnackBar(content: Text('Username or password was incorrect')));
+                    // Handle Invalid Credentials
+                    on BadRequestException {
+                      showSnackbar('Either the provided username or password was incorrect.', context);
                       _loginForm.currentState.reset();
                       _usernameController.clear();
                       _passwordController.clear();
+                    } on ServerErrorException {
+                      showSnackbar("The server encountered an error, please try again later. If this error stays please contact the administrators.", context);
+                    } on TimeoutException {
+                      showSnackbar("The server took too long to respond, please try again later.", context);
                     }
                   }
-
                 },
                 textColor: Theme.of(context).textTheme.bodyText1.color,
                 shape: RoundedRectangleBorder(

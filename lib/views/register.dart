@@ -1,8 +1,11 @@
+import 'dart:async';
+
 import 'package:SCTFPasswordManager/core/cache.dart';
+import 'package:SCTFPasswordManager/core/exceptions.dart';
+import 'package:SCTFPasswordManager/core/tools.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:SCTFPasswordManager/core/models.dart';
-import 'package:SCTFPasswordManager/core/api.dart';
 import 'package:provider/provider.dart';
 
 class RegisterView extends StatelessWidget {
@@ -178,13 +181,34 @@ class RegisterFormState extends State<RegisterForm> {
                   RaisedButton(
                     onPressed: () {
                       if (_formKey.currentState.validate()) {
-                        Scaffold.of(context).showSnackBar(
-                            SnackBar(content: Text('Processing Data')));
-                        UserModel u = UserModel(userName: _usernameController.text,
-                          eMail: _emailController.text, firstName: _firstnameController.text,
-                          lastName: _lastnameController.text
-                        );
-                        api.createUser(u, _passwordController.text).catchError((error) => print(error.errorMessage()));
+                        showSnackbar('Processing Data', context,
+                            dismiss: false);
+                        UserModel u = UserModel(
+                            userName: _usernameController.text,
+                            eMail: _emailController.text,
+                            firstName: _firstnameController.text,
+                            lastName: _lastnameController.text);
+                        try {
+                          api.createUser(u, _passwordController.text);
+                          showSnackbar(
+                              "Account created, you'll need to confirm your e-mail address before you can login.",
+                              context);
+                          Navigator.pop(context);
+                        } on BadRequestException catch (e) {
+                          showSnackbar(e.errorMessage(), context);
+                        } on ServerErrorException {
+                          showSnackbar(
+                              "The server encountered an error while processing your registration, please try again later.",
+                              context);
+                        } on ModelAlreadyExistsException {
+                          showSnackbar(
+                              "The user you are trying to create already exists. Do you want to login or did you forget your password?",
+                              context);
+                        } on TimeoutException {
+                          showSnackbar(
+                              "The server took too long to respond, please try again later.",
+                              context);
+                        }
                       }
                       // Navigator.pushNamed(context, "login");
                     },

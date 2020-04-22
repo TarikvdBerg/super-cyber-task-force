@@ -1,6 +1,9 @@
-import 'package:SCTFPasswordManager/core/api.dart';
+import 'dart:async';
+
 import 'package:SCTFPasswordManager/core/cache.dart';
+import 'package:SCTFPasswordManager/core/exceptions.dart';
 import 'package:SCTFPasswordManager/core/models.dart';
+import 'package:SCTFPasswordManager/core/tools.dart';
 import 'package:SCTFPasswordManager/passwords/add_password.dart';
 import 'package:SCTFPasswordManager/groups/add_group.dart';
 import 'package:SCTFPasswordManager/sidebar/actionbutton.dart';
@@ -20,7 +23,7 @@ class SideBar extends StatefulWidget {
 
 class _SideBarState extends State<SideBar> {
   void confirmLogOut(context) {
-    Cache cache = Provider.of<Cache>(context);
+    Cache cache = Provider.of<Cache>(context, listen: false);
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -68,7 +71,22 @@ class _SideBarState extends State<SideBar> {
                     }
 
                     if (snapshot.hasError) {
-                      return Text(snapshot.error);
+                      if (snapshot.error is RequestNotAuthenticatedException) {
+                        showSnackbar(
+                            "The current authentication credentials are invalid. Log out and log back in.",
+                            context);
+                      }
+                      if (snapshot.error is ServerErrorException) {
+                        showSnackbar(
+                            "The server encountered an error while retrieving information. Please try again later.",
+                            context);
+                      }
+                      if (snapshot.error is TimeoutException) {
+                        showSnackbar(
+                            "The server took too long to respond. Please try again later.",
+                            context);
+                      }
+                      return SideBarProfile(model: UserModel());
                     }
 
                     return SideBarProfile(model: snapshot.data);
