@@ -68,7 +68,7 @@ class Cache extends API {
   // Deauthenticates the API and deletes local authentication key
   void deAuthenticate() {
     super.deAuthenticate();
-    store.record(authKey).delete(db);
+    store.delete(db);
   }
 
   // Checks the local storage for a user object and validates if the 
