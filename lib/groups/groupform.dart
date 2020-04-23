@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:SCTFPasswordManager/core/cache.dart';
+import 'package:SCTFPasswordManager/core/encryption.dart';
 import 'package:SCTFPasswordManager/core/exceptions.dart';
 import 'package:SCTFPasswordManager/core/tools.dart';
 import 'package:flutter/material.dart';
@@ -18,38 +19,20 @@ class GroupForm extends StatefulWidget {
 }
 
 class _GroupFormState extends State<GroupForm> {
-  TextEditingController _groupNameController;
-
-  String currentGroup;
-
-  @override
-  void initState() {
-    _groupNameController = TextEditingController(
-        text: this.widget.group != null ? this.widget.group.name : null);
-
-    if (this.widget.group != null) {
-      currentGroup = this.widget.group.name;
-    }
-
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    _groupNameController.dispose();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     Cache api = Provider.of<Cache>(context);
+    EncryptionManager encryptor = Provider.of<EncryptionManager>(context);
 
     return Form(
       key: this.widget.formKey,
       child: Column(
         children: <Widget>[
           TextFormField(
-            controller: _groupNameController,
+            initialValue:
+                this.widget.group.name == null || this.widget.group.name == ""
+                    ? ""
+                    : encryptor.decrypt(this.widget.group.name),
             decoration: InputDecoration(
               labelText: "Group Name",
             ),
@@ -61,7 +44,7 @@ class _GroupFormState extends State<GroupForm> {
               return null;
             },
             onSaved: (value) {
-              this.widget.group.name = value;
+              this.widget.group.name = encryptor.encrypt(value);
             },
           ),
           ButtonBar(

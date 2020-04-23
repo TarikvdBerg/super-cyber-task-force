@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:SCTFPasswordManager/core/cache.dart';
+import 'package:SCTFPasswordManager/core/encryption.dart';
 import 'package:SCTFPasswordManager/core/exceptions.dart';
 import 'package:SCTFPasswordManager/core/models.dart';
 import 'package:SCTFPasswordManager/core/tools.dart';
@@ -148,6 +149,7 @@ class _PasswordGroupState extends State<PasswordGroup> {
   @override
   Widget build(BuildContext context) {
     Cache api = Provider.of<Cache>(context);
+    EncryptionManager encryptor = Provider.of<EncryptionManager>(context);
 
     return Container(
       color: Theme.of(context).primaryColorDark,
@@ -171,7 +173,7 @@ class _PasswordGroupState extends State<PasswordGroup> {
                 alignment: Alignment.centerLeft,
                 child: Stack(children: <Widget>[
                   Text(
-                    this.widget.passwordGroup.name,
+                    encryptor.decrypt(this.widget.passwordGroup.name),
                     style: Theme.of(context).textTheme.headline5,
                   ),
                   Column(

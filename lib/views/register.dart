@@ -1,9 +1,9 @@
 import 'dart:async';
 
 import 'package:SCTFPasswordManager/core/cache.dart';
+import 'package:SCTFPasswordManager/core/encryption.dart';
 import 'package:SCTFPasswordManager/core/exceptions.dart';
 import 'package:SCTFPasswordManager/core/tools.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:SCTFPasswordManager/core/models.dart';
 import 'package:provider/provider.dart';
@@ -188,8 +188,22 @@ class RegisterFormState extends State<RegisterForm> {
                             eMail: _emailController.text,
                             firstName: _firstnameController.text,
                             lastName: _lastnameController.text);
+
+                        EncryptionManager encManager =
+                            Provider.of<EncryptionManager>(context,
+                                listen: false);
+
+                        String encKey = encManager.hash(
+                            _passwordController.text, _usernameController.text);
+
+                        String hashedPassword = encManager.hash(
+                            encKey, _usernameController.text,
+                            iterationCount: 1);
+
                         try {
-                          api.createUser(u, _passwordController.text);
+                          api.createUser(u, hashedPassword).catchError((e) {
+                            print(e.errorMessage());
+                          });
                           showSnackbar(
                               "Account created, you'll need to confirm your e-mail address before you can login.",
                               context);

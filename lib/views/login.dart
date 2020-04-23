@@ -1,10 +1,10 @@
 import 'dart:async';
 
+import 'package:SCTFPasswordManager/core/encryption.dart';
 import 'package:SCTFPasswordManager/core/exceptions.dart';
 import 'package:SCTFPasswordManager/core/tools.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:SCTFPasswordManager/core/hashing.dart';
 import 'package:provider/provider.dart';
 import 'package:SCTFPasswordManager/core/cache.dart';
 
@@ -126,11 +126,20 @@ class LoginFormState extends State<LoginForm> {
               RaisedButton(
                 onPressed: () async {
                   if (_loginForm.currentState.validate()) {
-                    var hashedpassword = pbkdf12(
-                        _usernameController.text, _passwordController.text);
+                    EncryptionManager encManager =
+                        Provider.of<EncryptionManager>(context, listen: false);
+
+                    String encKey = encManager.hash(
+                        _passwordController.text, _usernameController.text);
+                    encManager.setKey(encKey);
+
+                    String hashedPassword = encManager.hash(
+                        encKey, _usernameController.text,
+                        iterationCount: 1);
+
                     try {
-                      var api_return = await api.authenticate(
-                          _usernameController.text, _passwordController.text);
+                      await api.authenticate(
+                          _usernameController.text, hashedPassword);
                       Navigator.pushNamed(context, "dashboard");
                       _loginForm.currentState.reset();
                       _usernameController.clear();
@@ -138,14 +147,20 @@ class LoginFormState extends State<LoginForm> {
                     }
                     // Handle Invalid Credentials
                     on BadRequestException {
-                      showSnackbar('Either the provided username or password was incorrect.', context);
+                      showSnackbar(
+                          'Either the provided username or password was incorrect.',
+                          context);
                       _loginForm.currentState.reset();
                       _usernameController.clear();
                       _passwordController.clear();
                     } on ServerErrorException {
-                      showSnackbar("The server encountered an error, please try again later. If this error stays please contact the administrators.", context);
+                      showSnackbar(
+                          "The server encountered an error, please try again later. If this error stays please contact the administrators.",
+                          context);
                     } on TimeoutException {
-                      showSnackbar("The server took too long to respond, please try again later.", context);
+                      showSnackbar(
+                          "The server took too long to respond, please try again later.",
+                          context);
                     }
                   }
                 },

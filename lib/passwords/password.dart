@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:SCTFPasswordManager/core/cache.dart';
+import 'package:SCTFPasswordManager/core/encryption.dart';
 import 'package:SCTFPasswordManager/core/exceptions.dart';
 import 'package:SCTFPasswordManager/core/models.dart';
 import 'package:SCTFPasswordManager/core/tools.dart';
@@ -164,6 +165,8 @@ class _PasswordState extends State<Password> {
 
   @override
   Widget build(BuildContext context) {
+    EncryptionManager encryptor = Provider.of<EncryptionManager>(context);
+
     return MouseRegion(
       onEnter: (PointerEnterEvent p) {
         setHover(true);
@@ -186,10 +189,10 @@ class _PasswordState extends State<Password> {
                 children: <Widget>[
                   Image.network(this.widget.model.imgURL, height: 100),
                   Text(
-                    this.widget.model.encName,
+                    encryptor.decrypt(this.widget.model.encName),
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  Text(this.widget.model.encUsername),
+                  Text(encryptor.decrypt(this.widget.model.encUsername)),
                 ],
               ),
               Column(

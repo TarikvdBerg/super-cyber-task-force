@@ -9,7 +9,7 @@ class EncryptionManager {
   static final String _keyAlgorithm = "SHA-256/HMAC/PBKDF2";
   AesCrypt _encrypter;
 
-  void setKey(String password, String salt, {int iterationCount: 100100}) {
+  String hash(String password, String salt, {int iterationCount: 100100}) {
     // create key derivator for key algorithm SHA-256/HMAC/PBKDF2
     KeyDerivator derivator = KeyDerivator(_keyAlgorithm);
     Pbkdf2Parameters params = Pbkdf2Parameters(
@@ -20,9 +20,12 @@ class EncryptionManager {
     derivator.init(params);
     var bytes = Uint8List.fromList(utf8.encode(password));
     var key = derivator.process(bytes);
+    return String.fromCharCodes(key);
+  }
 
+  String setKey(String key) {
     _encrypter = AesCrypt(
-      String.fromCharCodes(key),
+      key,
       'cbc',
       'iso10126-2',
     );

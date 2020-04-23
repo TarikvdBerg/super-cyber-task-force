@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:SCTFPasswordManager/core/cache.dart';
+import 'package:SCTFPasswordManager/core/encryption.dart';
 import 'package:SCTFPasswordManager/core/exceptions.dart';
 import 'package:SCTFPasswordManager/core/tools.dart';
 import 'package:flutter/material.dart';
@@ -18,12 +19,6 @@ class PasswordForm extends StatefulWidget {
 }
 
 class _PasswordFormState extends State<PasswordForm> {
-  TextEditingController _passwordNameController;
-  TextEditingController _passwordDescriptionController;
-  TextEditingController _passwordUsernameController;
-  TextEditingController _passwordPasswordController;
-  TextEditingController _passwordRepeatPasswordController;
-
   String currentGroup;
 
   DateTime _expiryDateTime;
@@ -31,44 +26,16 @@ class _PasswordFormState extends State<PasswordForm> {
   bool _obscurePassword = true;
   bool _obscureRepeatPassword = true;
 
+  GlobalKey passwordInputKey = GlobalKey<FormFieldState>();
+  GlobalKey passwordRepeatInputKey = GlobalKey<FormFieldState>();
+
   @override
   void initState() {
-    // Populate the text controllers with a value if the password is provided.
-    _passwordNameController = TextEditingController(
-        text:
-            this.widget.password != null ? this.widget.password.encName : null);
-    _passwordDescriptionController = TextEditingController(
-        text: this.widget.password != null
-            ? this.widget.password.encDescription
-            : null);
-    _passwordUsernameController = TextEditingController(
-        text: this.widget.password != null
-            ? this.widget.password.encUsername
-            : null);
-    _passwordPasswordController = TextEditingController(
-        text: this.widget.password != null
-            ? this.widget.password.encPassword
-            : null);
-    _passwordRepeatPasswordController = TextEditingController(
-        text: this.widget.password != null
-            ? this.widget.password.encPassword
-            : null);
-
     if (this.widget.password.group != null) {
       currentGroup = this.widget.password.group;
     }
 
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    _passwordNameController.dispose();
-    _passwordDescriptionController.dispose();
-    _passwordUsernameController.dispose();
-    _passwordPasswordController.dispose();
-    _passwordRepeatPasswordController.dispose();
-    super.dispose();
   }
 
   void groupChanged(dynamic inp) {
@@ -78,13 +45,17 @@ class _PasswordFormState extends State<PasswordForm> {
   @override
   Widget build(BuildContext context) {
     Cache api = Provider.of<Cache>(context);
-
+    EncryptionManager encryptor = Provider.of<EncryptionManager>(context);
     return Form(
       key: this.widget.formKey,
       child: Column(
         children: <Widget>[
           TextFormField(
-            controller: _passwordNameController,
+            initialValue: this.widget.password.encName == null ||
+                    this.widget.password.encName == ""
+                ? ""
+                : encryptor.decrypt(this.widget.password.encName),
+            // controller: _passwordNameController,
             decoration: InputDecoration(
               labelText: "Password Name",
             ),
@@ -96,20 +67,26 @@ class _PasswordFormState extends State<PasswordForm> {
               return null;
             },
             onSaved: (value) {
-              this.widget.password.encName = value;
+              this.widget.password.encName = encryptor.encrypt(value);
             },
           ),
           TextFormField(
-            controller: _passwordDescriptionController,
+            initialValue: this.widget.password.encPassword == null ||
+                    this.widget.password.encPassword == ""
+                ? ""
+                : encryptor.decrypt(this.widget.password.encPassword),
             decoration: InputDecoration(
               labelText: "Password Description",
             ),
             onSaved: (value) {
-              this.widget.password.encDescription = value;
+              this.widget.password.encDescription = encryptor.encrypt(value);
             },
           ),
           TextFormField(
-            controller: _passwordUsernameController,
+            initialValue: this.widget.password.encUsername == null ||
+                    this.widget.password.encUsername == ""
+                ? ""
+                : encryptor.decrypt(this.widget.password.encUsername),
             decoration: InputDecoration(labelText: "Username"),
             validator: (value) {
               if (value == null || value == "") {
@@ -119,11 +96,15 @@ class _PasswordFormState extends State<PasswordForm> {
               return null;
             },
             onSaved: (value) {
-              this.widget.password.encUsername = value;
+              this.widget.password.encUsername = encryptor.encrypt(value);
             },
           ),
           TextFormField(
-            controller: _passwordPasswordController,
+            key: passwordInputKey,
+            initialValue: this.widget.password.encPassword == null ||
+                    this.widget.password.encPassword == ""
+                ? ""
+                : encryptor.decrypt(this.widget.password.encPassword),
             decoration: InputDecoration(
               labelText: "Password",
               suffixIcon: IconButton(
@@ -145,64 +126,67 @@ class _PasswordFormState extends State<PasswordForm> {
               return null;
             },
             onSaved: (value) {
-              this.widget.password.encPassword = value;
+              this.widget.password.encPassword = encryptor.encrypt(value);
             },
           ),
-          TextFormField(
-            controller: _passwordRepeatPasswordController,
-            decoration: InputDecoration(
-              labelText: "Repeat Password",
-              suffixIcon: IconButton(
-                icon: Icon(_obscureRepeatPassword
-                    ? Icons.visibility_off
-                    : Icons.visibility),
-                onPressed: () {
-                  setState(() {
-                    _obscureRepeatPassword = !_obscureRepeatPassword;
-                  });
-                },
-              ),
-            ),
-            obscureText: _obscureRepeatPassword,
-            validator: (value) {
-              if (value == null || value == "") {
-                return "The repeat password cannot be empty";
-              }
+          // TextFormField(
+          //   initialValue: this.widget.password.encPassword == null ||
+          //           this.widget.password.encPassword == ""
+          //       ? ""
+          //       : encryptor.decrypt(this.widget.password.encPassword),
+          //   decoration: InputDecoration(
+          //     labelText: "Repeat Password",
+          //     suffixIcon: IconButton(
+          //       icon: Icon(_obscureRepeatPassword
+          //           ? Icons.visibility_off
+          //           : Icons.visibility),
+          //       onPressed: () {
+          //         setState(() {
+          //           _obscureRepeatPassword = !_obscureRepeatPassword;
+          //         });
+          //       },
+          //     ),
+          //   ),
+          //   obscureText: _obscureRepeatPassword,
+          //   validator: (value) {
+          //     if (value == null || value == "") {
+          //       return "The repeat password cannot be empty";
+          //     }
 
-              if (value != _passwordPasswordController.text) {
-                return "Repeat password must be the same as the password.";
-              }
+          //     if (value != passwordInputKey.currentState.widget.) {
+          //       return "Repeat password must be the same as the password.";
+          //     }
 
-              return null;
-            },
-          ),
-          TextFormField(
-            readOnly: true,
-            decoration: InputDecoration(
-              labelText: "Expiration Date",
-              suffixIcon: Icon(Icons.calendar_today),
-            ),
-            onTap: () {
-              showDatePicker(
-                  context: context,
-                  initialDate: _expiryDateTime == null
-                      ? DateTime.now()
-                      : _expiryDateTime,
-                  firstDate: DateTime.now(),
-                  lastDate: DateTime(3000),
-                  builder: (context, child) {
-                    return Column(
-                      children: <Widget>[
-                        Container(height: 450, width: 700, child: child),
-                      ],
-                    );
-                  }).then((pickedDate) {
-                setState(() {
-                  _expiryDateTime = pickedDate;
-                });
-              });
-            },
-          ),
+          //     return null;
+          //   },
+          // ),
+          // TextFormField(
+          //   readOnly: true,
+          //   decoration: InputDecoration(
+          //     labelText: "Expiration Date",
+          //     suffixIcon: Icon(Icons.calendar_today),
+          //   ),
+          //   onTap: () {
+          //     showDatePicker(
+          //         context: context,
+          //         initialDate: _expiryDateTime == null
+          //             ? DateTime.now()
+          //             : _expiryDateTime,
+          //         firstDate: DateTime.now(),
+          //         lastDate: DateTime(3000),
+          //         builder: (context, child) {
+          //           return Column(
+          //             children: <Widget>[
+          //               Container(height: 450, width: 700, child: child),
+          //             ],
+          //           );
+          //         }).then((pickedDate) {
+          //       setState(() {
+          //         _expiryDateTime = pickedDate;
+          //       });
+          //     });
+          //   },
+          // ),
           FutureBuilder<List<PasswordGroupModel>>(
             future: api.fetchAllGroups(),
             builder: (BuildContext context,
@@ -236,7 +220,7 @@ class _PasswordFormState extends State<PasswordForm> {
               List<DropdownMenuItem<dynamic>> itemList = [];
               snapshot.data.forEach((element) {
                 itemList.add(DropdownMenuItem(
-                    value: element.id, child: Text(element.name)));
+                    value: element.id, child: Text(encryptor.decrypt(element.name))));
               });
 
               return DropdownButtonFormField(
